@@ -14,8 +14,6 @@ RoboticController::~RoboticController() {}
 void RoboticController::activate() {
     activated = true;
     std::cout << "Robotic controller activated!" << std::endl;
-
-    
 }
 
 // Deactivate the robotic controller
