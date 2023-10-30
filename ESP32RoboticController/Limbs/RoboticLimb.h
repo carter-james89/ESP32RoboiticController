@@ -1,7 +1,7 @@
 #ifndef ROBOTICLIMB_H
 #define ROBOTICLIMB_H
 
-#include "LimbSegment.h" 
+#include "LimbSegment.h"
 
 class RoboticLimb {
 public:
