@@ -19,7 +19,7 @@ public:
 
 private:
     bool activated;
-     RoboticLimb _flLimb;
+   //  RoboticLimb _flLimb;
     // RoboticLimb _frLimb;
     // RoboticLimb _brLimb;
     // RoboticLimb _blLimb;
