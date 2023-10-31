@@ -2,10 +2,15 @@
 #include <iostream>
 #include "RoboticLimb.h"
 
+#include "QuadrupedConfiguration.h"
 
-
+  // Default constructor
+    // In your RoboticController.cpp
+RoboticController::RoboticController() : activated(false) {
+    // Initialize your controller without a configuration
+}
 // Constructor
-RoboticController::RoboticController() : activated(true) {}
+RoboticController::RoboticController(QuadrupedConfiguration config) : activated(true) {}
 
 // Destructor
 RoboticController::~RoboticController() {}

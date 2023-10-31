@@ -3,11 +3,14 @@
 
 
 #include "RoboticLimb.h"
+#include "QuadrupedConfiguration.h"
 
 class RoboticController {
 public:
-    // Constructor
+  // Default constructor
     RoboticController();
+    // Constructor
+    RoboticController(QuadrupedConfiguration config);
 
     // Destructor
     ~RoboticController();
