@@ -1,8 +1,7 @@
 #include "LimbSegment.h"
 #include <iostream>
 
-#include "Servos/DigitalServo.h"
-//#include "Servos/DigitalServo.h"
+#include "../Servos/DigitalServo.h"
 #include <vector>  // Include the vector header
 
 // Constructor
