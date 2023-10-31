@@ -1,7 +1,7 @@
 #ifndef ROBOTICLIMB_H
 #define ROBOTICLIMB_H
 
-//#include "LimbSegment.h"
+#include "LimbSegment.h"
 
 class RoboticLimb {
 public:
@@ -20,9 +20,9 @@ public:
 
 private:
     bool activated;
-    // LimbSegment _baseSegment; 
-    // LimbSegment _hipSegment; 
-    // LimbSegment _kneeSegment; 
+     LimbSegment _baseSegment; 
+     LimbSegment _hipSegment; 
+     LimbSegment _kneeSegment; 
 };
 
 #endif // ROBOTICLIMB_H

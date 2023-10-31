@@ -2,7 +2,7 @@
 #define ROBOTICCONTROLLER_H
 
 
-#include "RoboticLimb.h" // Include the header file here
+#include "RoboticLimb.h"
 
 class RoboticController {
 public:
@@ -20,9 +20,9 @@ public:
 private:
     bool activated;
      RoboticLimb _flLimb;
-    // RoboticLimb _frLimb;
-    // RoboticLimb _brLimb;
-    // RoboticLimb _blLimb;
+     RoboticLimb _frLimb;
+     RoboticLimb _brLimb;
+     RoboticLimb _blLimb;
 };
 
 #endif // ROBOTICCONTROLLER_H

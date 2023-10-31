@@ -1,8 +1,9 @@
-#include "LimbSegment.h"
+
 #include <iostream>
 
-//#include "../Servos/DigitalServo.h"
+#include "DigitalServo.h"
 #include <vector>  // Include the vector header
+#include "LimbSegment.h"
 
 // Constructor
 LimbSegment::LimbSegment() : isActive(false) {
@@ -24,6 +25,6 @@ void LimbSegment::deactivate() {
     std::cout << "LimbSegment deactivated!" << std::endl;
 }
 
-//  std::vector<DigitalServo> LimbSegment::GetServos(){
-//     return _servos;
-//}
+ std::vector<DigitalServo> LimbSegment::GetServos(){
+    return _servos;
+}
