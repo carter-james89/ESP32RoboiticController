@@ -1,6 +1,6 @@
 #include <iostream>
 #include "RoboticLimb.h"
-#include "LimbSegment.h" 
+//#include "LimbSegment.h" 
 
 // Constructor
 RoboticLimb::RoboticLimb() : activated(true) {}

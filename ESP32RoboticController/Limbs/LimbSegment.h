@@ -1,7 +1,7 @@
 #ifndef LIMBSEGMENT_H
 #define LIMBSEGMENT_H
 
-#include "../Servos/DigitalServo.h"
+//#include "../Servos/DigitalServo.h"
 #include <vector>  // Include the vector header
 
 class LimbSegment {
