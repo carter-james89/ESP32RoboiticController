@@ -8,11 +8,11 @@ DigitalServo::DigitalServo(int servoNumber, int homePWM, int minAngle,int maxAng
        
   m_servoNumber = 19;
  
-  m_maxPWM = 2500;
-  m_minPWM = 500;// homePWM - (servoRange/2);
+  m_maxPWM = 8000;
+  m_minPWM = 1300;// homePWM - (servoRange/2);
    m_homePWM = (m_maxPWM + m_minPWM)/2;
-  m_maxAngle = 90;
-  m_minAngle = -90;
+  m_maxAngle = 135;
+  m_minAngle = -135;
   m_flip = flip;
 
       // Initialize the servo PWM properties
@@ -33,14 +33,15 @@ long Map(long x, long in_min, long in_max, long out_min, long out_max) {
 
 
 void DigitalServo::SetPosition(float angle) {
-    std::cout << "Set servo to angle: " << angle << std::endl;
+   
    float desiredAngle = constrain(angle, m_minAngle, m_maxAngle);
+    std::cout << "Set servo to angle: " << desiredAngle << std::endl;
    // std::cout << "Constrained angle: " << desiredAngle << std::endl;
    // std::cout << "Mapping with minAngle: " << m_minAngle << ", maxAngle: " << m_maxAngle << ", minPWM: " << m_minPWM << ", maxPWM: " << m_maxPWM << std::endl;
 
     int pwmValue = Map(static_cast<long>(angle), static_cast<long>(m_minAngle), static_cast<long>(m_maxAngle), static_cast<long>(m_minPWM), static_cast<long>(m_maxPWM));
   //  std::cout << "PWM Value: " << pwmValue << std::endl;
-
+ std::cout << "Set servo PWM " << pwmValue << std::endl;
     // Write the PWM value to the servo
   //  std::cout << "m_homePWM value: " << m_homePWM << std::endl;
    // Serial.println(m_homePWM);
