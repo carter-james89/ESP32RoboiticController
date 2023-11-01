@@ -45,7 +45,7 @@ BittleQuadrupedConfiguration config;
  //   Serial.print("Listening on port: ");
  // Serial.println(listenPort);
 
-    delay(1000);
+    delay(5000);
 
     _roboticController.RunControllerLoop();
 }

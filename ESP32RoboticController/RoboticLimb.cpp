@@ -15,7 +15,8 @@ _kneeSegment = limbSegments[2];
 RoboticLimb::~RoboticLimb() {}
 
 void RoboticLimb::CalculateIK(){
-   _hipSegment->SetServo(1,10);
+      std::cout << "Run IK!" << std::endl;
+   _hipSegment->SetServo(0,45);
 }
 
 // Activate the robotic limb
