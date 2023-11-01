@@ -10,10 +10,24 @@ RoboticController::RoboticController() : activated(false) {
     // Initialize your controller without a configuration
 }
 // Constructor
-RoboticController::RoboticController(QuadrupedConfiguration config) : activated(true) {}
+RoboticController::RoboticController(QuadrupedConfiguration config) : activated(true) 
+{
+    
+    _flLimb = config.GetFrontLeftLimb();
+    _frLimb = config.GetFrontRightLimb();
+    _brLimb = config.GetBackRightLimb();
+    _blLimb= config.GetBackLeftLimb();
+    // _frLimb = RoboticLimb(new LimbSegment[3]{base,hip,knee});
+    // _blLimb = RoboticLimb(new LimbSegment[3]{base,hip,knee});
+    // _brLimb = RoboticLimb(new LimbSegment[3]{base,hip,knee});
+}
 
 // Destructor
 RoboticController::~RoboticController() {}
+
+void RunControllerLoop(){
+    
+}
 
 // Activate the robotic controller
 void RoboticController::activate() {

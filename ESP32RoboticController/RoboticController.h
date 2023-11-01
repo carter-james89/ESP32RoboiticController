@@ -16,6 +16,7 @@ public:
     ~RoboticController();
 
     // Member functions
+    void RunControllerLoop();
     void activate();
     void deactivate();
     bool isActivated() const;

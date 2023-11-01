@@ -4,10 +4,14 @@
 #include "DigitalServo.h"
 #include <vector>  // Include the vector header
 
+
 class LimbSegment {
 public:
     // Constructor
     LimbSegment();
+
+        // Constructor
+    LimbSegment(double length, std::vector<DigitalServo*> servos);
 
     // Destructor
     ~LimbSegment();
@@ -16,12 +20,17 @@ public:
     void activate();
     void deactivate();
 
-     std::vector<DigitalServo> GetServos();
+    void SetServo(int servoPosInList, double angle);
+
+     std::vector<DigitalServo*>  GetServos();
 
 private:
     // Member variables can be added here
     bool isActive;
-   std::vector<DigitalServo> _servos; 
+    double _length;
+   std::vector<DigitalServo*>  _servos; 
+
+
 };
 
 #endif // LIMBSEGMENT_H

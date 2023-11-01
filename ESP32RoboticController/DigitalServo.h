@@ -15,8 +15,8 @@ int m_maxAngle;
 bool m_flip;
 
 public : 
-  DigitalServo(int servoNumber, int homePWM, int range, int minAngle, int maxAngle,  bool flip);
-  void SetDigitalServo(float angle);
+  DigitalServo(int servoNumber, int homePWM, int minAngle, int maxAngle,  bool flip);
+  void SetPosition(float angle);
 
 };
 #endif

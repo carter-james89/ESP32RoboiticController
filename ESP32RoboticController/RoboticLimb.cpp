@@ -2,11 +2,21 @@
 #include "RoboticLimb.h"
 #include "LimbSegment.h"
 
-// Constructor
 RoboticLimb::RoboticLimb() : activated(true) {}
+// Constructor
+RoboticLimb::RoboticLimb(std::vector<LimbSegment*> limbSegments) : activated(true) {
+_baseSegment = limbSegments[0];
+_hipSegment = limbSegments[1];
+_kneeSegment = limbSegments[2];
+
+}
 
 // Destructor
 RoboticLimb::~RoboticLimb() {}
+
+void RoboticLimb::CalculateIK(){
+_hipSegment->SetServo(1,10);
+}
 
 // Activate the robotic limb
 void RoboticLimb::activate() {

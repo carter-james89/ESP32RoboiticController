@@ -2,11 +2,14 @@
 #define ROBOTICLIMB_H
 
 #include "LimbSegment.h"
+#include <iostream>
 
 class RoboticLimb {
 public:
+
+RoboticLimb() ;
     // Constructor
-    RoboticLimb();
+    RoboticLimb(std::vector<LimbSegment*>);
 
     // Destructor
     ~RoboticLimb();
@@ -20,9 +23,9 @@ public:
 
 private:
     bool activated;
-     LimbSegment _baseSegment; 
-     LimbSegment _hipSegment; 
-     LimbSegment _kneeSegment; 
+     LimbSegment* _baseSegment; 
+     LimbSegment* _hipSegment; 
+     LimbSegment* _kneeSegment; 
 };
 
 #endif // ROBOTICLIMB_H

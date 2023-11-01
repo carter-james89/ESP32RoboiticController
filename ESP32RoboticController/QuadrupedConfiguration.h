@@ -1,7 +1,9 @@
 #ifndef QUADRUPEDCONFIGURATION_H
 #define QUADRUPEDCONFIGURATION_H
 
-#include "LimbSegment.h"
+
+#include "RoboticLimb.h"
+#include <memory>
 
 class QuadrupedConfiguration {
 public:
@@ -10,10 +12,12 @@ public:
 
     // Destructor
     ~QuadrupedConfiguration ();
-    // Pure virtual functions to be implemented by subclasses
-     LimbSegment GetBaseSegment();
-     LimbSegment GetHipSegment() ;
-     LimbSegment GetKneeSegment();
+
+
+     RoboticLimb GetFrontLeftLimb();
+     RoboticLimb GetFrontRightLimb();
+  RoboticLimb GetBackLeftLimb();
+     RoboticLimb GetBackRightLimb();
 
 };
 

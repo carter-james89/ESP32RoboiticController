@@ -1,7 +1,7 @@
 
 #include "DigitalServo.h"
 
-DigitalServo::DigitalServo(int servoNumber, int homePWM, int servoRange, int minAngle,int maxAngle,  bool flip)
+DigitalServo::DigitalServo(int servoNumber, int homePWM, int minAngle,int maxAngle,  bool flip)
 {
   m_servoNumber = servoNumber;
   m_homePWM = homePWM;
@@ -16,7 +16,7 @@ DigitalServo::DigitalServo(int servoNumber, int homePWM, int servoRange, int min
     ledcAttachPin(m_servoNumber, m_servoNumber);
 }
 
-void DigitalServo::SetDigitalServo(float angle)
+void DigitalServo::SetPosition(float angle)
 {
 float desiredAngle = constrain(angle, m_minAngle, m_maxAngle);
  int pwmValue;

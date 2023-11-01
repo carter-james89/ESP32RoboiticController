@@ -5,10 +5,21 @@
 #include <vector>  // Include the vector header
 #include "LimbSegment.h"
 
+
 // Constructor
-LimbSegment::LimbSegment() : isActive(false) {
+LimbSegment::LimbSegment() : isActive(true) {
     // Initialization can be added here
 }
+
+ LimbSegment::LimbSegment(double length, std::vector<DigitalServo*> servos): isActive(true) 
+ {
+  _length = length;
+  _servos = servos;
+ }
+
+ void LimbSegment::SetServo(int servoPosInList, double angle){
+    _servos[servoPosInList]->SetPosition(angle);
+ }
 
 // Destructor
 LimbSegment::~LimbSegment() {
@@ -25,6 +36,6 @@ void LimbSegment::deactivate() {
     std::cout << "LimbSegment deactivated!" << std::endl;
 }
 
- std::vector<DigitalServo> LimbSegment::GetServos(){
+std::vector<DigitalServo*>  LimbSegment::GetServos(){
     return _servos;
 }
