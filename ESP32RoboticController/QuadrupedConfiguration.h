@@ -1,24 +1,22 @@
 #ifndef QUADRUPEDCONFIGURATION_H
 #define QUADRUPEDCONFIGURATION_H
 
-
 #include "RoboticLimb.h"
 #include <memory>
 
 class QuadrupedConfiguration {
 public:
     // Constructor
-    QuadrupedConfiguration ();
+    QuadrupedConfiguration();
 
     // Destructor
-    ~QuadrupedConfiguration ();
+    virtual ~QuadrupedConfiguration();
 
-
-     RoboticLimb GetFrontLeftLimb();
-     RoboticLimb GetFrontRightLimb();
-  RoboticLimb GetBackLeftLimb();
-     RoboticLimb GetBackRightLimb();
-
+    // Pure virtual functions
+    virtual RoboticLimb GetFrontLeftLimb() = 0;
+    virtual RoboticLimb GetFrontRightLimb() = 0;
+    virtual RoboticLimb GetBackLeftLimb() = 0;
+    virtual RoboticLimb GetBackRightLimb() = 0;
 };
 
 #endif // QUADRUPEDCONFIGURATION_H

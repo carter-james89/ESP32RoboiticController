@@ -9,7 +9,7 @@ private :
   int m_servoNumber;
   int m_maxPWM;
   int m_minPWM;
-  int m_homePWM;
+      uint32_t m_homePWM;
   int m_minAngle;
 int m_maxAngle;
 bool m_flip;

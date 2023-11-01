@@ -4,6 +4,9 @@
 #include <WiFiUdp.h>
 
 #include "RoboticController.h"
+#include "QuadrupedConfiguration.h"
+#include "BittleQuadrupedConfiguration.h"
+
 
 const char* ssid = "because-fi";
 const char* password = "DaveReevis";
@@ -17,11 +20,14 @@ RoboticController _roboticController;
 void setup() {
   // initialize serial communication at 115200 bits per second:
   Serial.begin(115200);
-     delay(1000);
+    delay(2000);
+  Serial.println("Robot bootup");
+  //return;
+   
     WiFi.begin(ssid, password);
     
   while (WiFi.status() != WL_CONNECTED) {
-    delay(1000);
+    delay(10000);
     Serial.println("Connecting to WiFi...");
   }
 
@@ -29,13 +35,23 @@ void setup() {
   Serial.print("IP Address: ");
   Serial.println(WiFi.localIP());
 
-   udp.begin(listenPort);
+ //  udp.begin(listenPort);
 
-    Serial.print("Listening on port: ");
-  Serial.println(listenPort);
+BittleQuadrupedConfiguration config; 
+  _roboticController = RoboticController(&config); 
+
+   Serial.println("Robot Configured");
+
+ //   Serial.print("Listening on port: ");
+ // Serial.println(listenPort);
+
+    delay(1000);
+
+    _roboticController.RunControllerLoop();
 }
 void loop() {
-
+ // Serial.println("looping");
+return;
   
     //Serial.print("Check UDP for Messages: ");
    int packetSize = udp.parsePacket();

@@ -10,7 +10,7 @@ public:
   // Default constructor
     RoboticController();
     // Constructor
-    RoboticController(QuadrupedConfiguration config);
+    RoboticController(QuadrupedConfiguration* config);
 
     // Destructor
     ~RoboticController();

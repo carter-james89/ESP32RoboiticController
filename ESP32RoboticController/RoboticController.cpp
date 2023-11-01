@@ -10,13 +10,13 @@ RoboticController::RoboticController() : activated(false) {
     // Initialize your controller without a configuration
 }
 // Constructor
-RoboticController::RoboticController(QuadrupedConfiguration config) : activated(true) 
+RoboticController::RoboticController(QuadrupedConfiguration* config) : activated(true) 
 {
-    
-    _flLimb = config.GetFrontLeftLimb();
-    _frLimb = config.GetFrontRightLimb();
-    _brLimb = config.GetBackRightLimb();
-    _blLimb= config.GetBackLeftLimb();
+        std::cout << "Robotic controller activated!" << std::endl;
+    _flLimb = config->GetFrontLeftLimb();
+   // _frLimb = config->GetFrontRightLimb();
+   // _brLimb = config->GetBackRightLimb();
+   // _blLimb= config->GetBackLeftLimb();
     // _frLimb = RoboticLimb(new LimbSegment[3]{base,hip,knee});
     // _blLimb = RoboticLimb(new LimbSegment[3]{base,hip,knee});
     // _brLimb = RoboticLimb(new LimbSegment[3]{base,hip,knee});
@@ -25,8 +25,8 @@ RoboticController::RoboticController(QuadrupedConfiguration config) : activated(
 // Destructor
 RoboticController::~RoboticController() {}
 
-void RunControllerLoop(){
-    
+void RoboticController::RunControllerLoop(){
+    _flLimb.CalculateIK();
 }
 
 // Activate the robotic controller
