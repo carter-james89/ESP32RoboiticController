@@ -6,16 +6,20 @@
 class DigitalServo 
 {
 private :
-  int m_servoNumber;
-  int m_maxPWM;
-  int m_minPWM;
-      int m_homePWM;
-  int m_minAngle;
-int m_maxAngle;
-bool m_flip;
+  int _servoNumber;
+  int _servoChannel;
+  int _maxPWM;
+  int _minPWM;
+      int _homePWM;
+      int _maxRange;
+  int _minAngleLimit;
+int _maxAngleLimit;
+bool _flip;
+//static int _servoChannel;
+
 
 public : 
-  DigitalServo(int servoNumber, int homePWM, int minAngle, int maxAngle,  bool flip);
+  DigitalServo(int servoNumber, int servoChannel, int homePWM, int minPWM, int MaxPWM, int servoRange, int minAngle, int maxAngle,  bool flip);
   void SetPosition(float angle);
 
 };

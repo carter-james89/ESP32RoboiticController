@@ -16,7 +16,8 @@ RoboticLimb::~RoboticLimb() {}
 
 void RoboticLimb::CalculateIK(){
       std::cout << "Run IK!" << std::endl;
-   _hipSegment->SetServo(0,20);
+   _hipSegment->SetServo(0,00);
+   _kneeSegment->SetServo(0,00);
 }
 
 // Activate the robotic limb
