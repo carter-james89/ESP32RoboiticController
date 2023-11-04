@@ -13,19 +13,29 @@ RoboticController::RoboticController() : activated(false) {
 RoboticController::RoboticController(QuadrupedConfiguration* config) : activated(true) 
 {
         std::cout << "Robotic controller activated!" << std::endl;
+          ESP32PWM::allocateTimer(0);
+    ESP32PWM::allocateTimer(1);
+    ESP32PWM::allocateTimer(2);
+    ESP32PWM::allocateTimer(3);
+
+
     _flLimb = config->GetFrontLeftLimb();
-   // _frLimb = config->GetFrontRightLimb();
-   // _brLimb = config->GetBackRightLimb();
-   // _blLimb= config->GetBackLeftLimb();
-    // _frLimb = RoboticLimb(new LimbSegment[3]{base,hip,knee});
-    // _blLimb = RoboticLimb(new LimbSegment[3]{base,hip,knee});
-    // _brLimb = RoboticLimb(new LimbSegment[3]{base,hip,knee});
+    _frLimb = config->GetFrontRightLimb();
+    _brLimb = config->GetBackRightLimb();
+    _blLimb= config->GetBackLeftLimb();
+
+
+  
+
 }
 
 // Destructor
 RoboticController::~RoboticController() {}
 
 void RoboticController::RunControllerLoop(){
+    _blLimb.CalculateIK();
+    _frLimb.CalculateIK();
+    _brLimb.CalculateIK();
     _flLimb.CalculateIK();
 }
 

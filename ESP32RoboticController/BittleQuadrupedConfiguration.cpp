@@ -4,18 +4,18 @@ BittleQuadrupedConfiguration::BittleQuadrupedConfiguration() {
     // Initialize your BittleQuadrupedConfiguration object here if needed
 }
 
-RoboticLimb BittleQuadrupedConfiguration::GetFrontLeftLimb() {
-  
-    std::vector<DigitalServo*> hipServos;
+
+ std::vector<LimbSegment*>  BuildLimbSegments(int hipPin,int kneePin, int hipAngleOffset, int kneeAngleOffset,int hipPWMOffset,int kneePWMOffset, float hipMin, float hipMax, float kneeMin, float kneeMax, bool flipHip, bool flipKnee){
+        std::vector<DigitalServo*> hipServos;
     std::vector<DigitalServo*> kneeServos;
 
-    int maxPWM = 8000;
-    int minPWM = 1300;
+    int maxPWM = 2500;
+    int minPWM = 500;
     int homePWM = (maxPWM + minPWM)/2;
 
     // Manually creating DigitalServo instances on the heap
-    DigitalServo* hipServo = new DigitalServo(19, 0,homePWM, minPWM,maxPWM,270, -60, 60, false);
-    DigitalServo* kneeServo = new DigitalServo(33, 1,homePWM, minPWM,maxPWM,270, -60, 60, false);
+    DigitalServo* hipServo = new DigitalServo(hipPin, hipAngleOffset,hipPWMOffset, minPWM,maxPWM, hipMin, hipMax, flipHip);
+    DigitalServo* kneeServo = new DigitalServo(kneePin, kneeAngleOffset, kneePWMOffset, minPWM,maxPWM, kneeMin, kneeMax, flipKnee);
 
     hipServos.push_back(hipServo);
     kneeServos.push_back(kneeServo);
@@ -28,21 +28,25 @@ RoboticLimb BittleQuadrupedConfiguration::GetFrontLeftLimb() {
     limbSegments.push_back(nullptr); // Assuming the first segment is null
     limbSegments.push_back(hipSegment);
     limbSegments.push_back(kneeSegment);
- // limbSegments.push_back(nullptr); // Assuming the first segment is null
-    return RoboticLimb(limbSegments);
+    return limbSegments;
+}
+
+RoboticLimb BittleQuadrupedConfiguration::GetFrontLeftLimb() {
+      //  return RoboticLimb(BuildLimbSegments(33,19,0,0,-135,135,-135,135,false,true));
+    return RoboticLimb(BuildLimbSegments(33,19,-45,-45,40,0,-135,135,-135,135,false,true));
 }
 
 RoboticLimb BittleQuadrupedConfiguration::GetFrontRightLimb() {
-    // Similar implementation as GetFrontLeftLimb, with appropriate servo IDs
-    // ...
+        return RoboticLimb(BuildLimbSegments(5,4,-45,-45,0,0,-135,135,-135,135,true,false));
+      //   return RoboticLimb(BuildLimbSegments(5,4,0,0,-135,135,-135,135,true,false));
 }
 
 RoboticLimb BittleQuadrupedConfiguration::GetBackRightLimb() {
-    // Similar implementation as GetFrontLeftLimb, with appropriate servo IDs
-    // ...
+        return RoboticLimb(BuildLimbSegments(15,2,45,-45,80,0,-135,135,-135,135,true,false));
+       //    return RoboticLimb(BuildLimbSegments(15,2,0,0,-135,135,-135,135,true,false));
 }
 
 RoboticLimb BittleQuadrupedConfiguration::GetBackLeftLimb() {
-    // Similar implementation as GetFrontLeftLimb, with appropriate servo IDs
-    // ...
+       return RoboticLimb(BuildLimbSegments(14,27,45,-45,20,80,-135,135,-135,135,false,true));
+      //    return RoboticLimb(BuildLimbSegments(14,27,0,0,-135,135,-135,135,false,true));
 }

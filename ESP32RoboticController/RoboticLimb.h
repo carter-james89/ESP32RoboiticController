@@ -20,8 +20,10 @@ RoboticLimb() ;
     bool isActivated() const;
 
     void CalculateIK();
+     void CalculateIK(double xPos,double yPos);
 
 private:
+float RadToDegree(float rad);
     bool activated;
      LimbSegment* _baseSegment; 
      LimbSegment* _hipSegment; 

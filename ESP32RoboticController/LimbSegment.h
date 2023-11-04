@@ -22,6 +22,8 @@ public:
 
     void SetServo(int servoPosInList, double angle);
 
+    double GetLength();
+
      std::vector<DigitalServo*>  GetServos();
 
 private:

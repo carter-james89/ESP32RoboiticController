@@ -18,7 +18,7 @@ LimbSegment::LimbSegment() : isActive(true) {
  }
 
  void LimbSegment::SetServo(int servoPosInList, double angle){
-    _servos[servoPosInList]->SetPosition(angle);
+    _servos[servoPosInList]->SetAngle(angle);
  }
 
 // Destructor
