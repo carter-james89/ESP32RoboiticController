@@ -15,14 +15,14 @@ class ConnectionData {
     String BoardType;
     String Name;
     IPAddress IP;
-    unsigned int Port;
+    int Port;
 
     // Serialize the ConnectionData to a JSON string
     String serialize() {
       StaticJsonDocument<200> doc;
-      doc["Type"] = BoardType;
+      doc["BoardType"] = BoardType;
       doc["Name"] = Name;
-      doc["IP"] = IP.toString();
+      doc["IP"] = IP;
       doc["Port"] = Port;
       
       String output;
@@ -34,10 +34,11 @@ class ConnectionData {
 
 const char* ssid = "because-fi";
 const char* password = "DaveReevis";
-const int localUDPPort = 49512; // Local port to listen for incoming UDP packets
-const int broadcastPort = 8081; // Port to send UDP packets to
+const int broadcastPort = 5500; // Local port to listen for incoming UDP packets
+const int connectionPort = 8081; // Port to send UDP packets to
 const char* broadcastIP = "255.255.255.255"; // Broadcast IP for the local network
-WiFiUDP udp;
+WiFiUDP broadcastUDP;
+WiFiUDP connectionUDP;
 String receivedMessage;
 bool responseReceived = false;
 
@@ -54,6 +55,7 @@ double _quatW = 0;
 double _quatX = 0;
 double _quatY = 0;
 double _quatZ = 0;
+int _previousBroadcastMillis = 0;
 
 Gyro gyro;
 
@@ -95,8 +97,9 @@ BittleQuadrupedConfiguration config;
  // Serial.println(listenPort);
 
     delay(5000);
- udp.begin(localUDPPort);
-  Serial.println("UDP started");
+ broadcastUDP.begin(broadcastPort);
+ connectionUDP.begin(connectionPort);
+ // Serial.println("UDP started");
   delay(1000);
 
   connectionData.BoardType = "esp32";
@@ -111,42 +114,46 @@ BittleQuadrupedConfiguration config;
     _roboticController.RunControllerLoop();
 }
 void loop() {
-   //gyro.update();
-   // gyro.printData();
+ 
     //delay(500);
-    return;
+  
  // Serial.println("looping");
  if (!responseReceived) {
-    // Broadcast a message every 10 seconds  
-    udp.beginPacket(broadcastIP, broadcastPort);
-    udp.print(connectionDataJson);
-    udp.endPacket();
-    Serial.println("Broadcast message sent");
+   unsigned long currentMillis = millis();
 
-    delay(5000); // Wait for 10 seconds
+
+    if (currentMillis - _previousBroadcastMillis >= 10000) { 
+  // Broadcast a message every 10 seconds  
+    broadcastUDP.beginPacket(broadcastIP, broadcastPort);
+    broadcastUDP.print(connectionDataJson);
+    broadcastUDP.endPacket();
+    Serial.print("Broadcast message sent ");
+    Serial.println(broadcastPort);
+    _previousBroadcastMillis = currentMillis;
+    }
 
     // Check for a response
-    int packetSize = udp.parsePacket();
+    int packetSize = connectionUDP.parsePacket();
     if (packetSize) {
       // Read the packet, process it, and check for a valid response
       char packetBuffer[255];
-      int len = udp.read(packetBuffer, 255);
+      int len = connectionUDP.read(packetBuffer, 255);
       if (len > 0) {
         packetBuffer[len] = 0; // Null-terminate the string
         receivedMessage = packetBuffer;
         Serial.print("Received response: ");
         Serial.println(receivedMessage);
         responseReceived = true; // Stop broadcasting since we got a response
+         lastResponseTime = millis();
+        // broadcastUDP.stop;
       }
     }
   } else {
-
-
-   int packetSize = udp.parsePacket();
+   int packetSize = connectionUDP.parsePacket();
   if (packetSize) {
     Serial.print("got packet: ");
     char packetData[255];
-    int bytesRead = udp.read(packetData, sizeof(packetData) - 1);
+    int bytesRead = connectionUDP.read(packetData, sizeof(packetData) - 1);
     if (bytesRead > 0) {
 
 lastResponseTime = millis();
@@ -167,9 +174,9 @@ lastResponseTime = millis();
           onMessageReceivedFromServer(messageContent);
 
           // Send response
-          udp.beginPacket(udp.remoteIP(), udp.remotePort());
-          udp.print("success");
-          udp.endPacket();       
+          connectionUDP.beginPacket(connectionUDP.remoteIP(), connectionUDP.remotePort());
+          connectionUDP.print("success");
+          connectionUDP.endPacket();       
 
           // Cache the remaining message for the next loop
           receivedMessage = receivedMessage.substring(endIndex + 1);
@@ -180,17 +187,12 @@ lastResponseTime = millis();
       }
     }
   }
-  
-  
     if (millis() - lastResponseTime > responseTimeout) {
       OnConnectionTimeout();
       // Reset the timer
       lastResponseTime = millis();
-    }
-  
+    } 
   }
-
-
 }
 
 void onMessageReceivedFromServer(String message) {
@@ -225,11 +227,24 @@ void calculateHeight() {
 void OnConnectionTimeout() {
   // This function will be called once the timeout occurs
   Serial.println("Connection timeout occurred!");
-  // Add any additional logic you need to handle the timeout here
+
+  // Reset the flag to start broadcasting again
+  responseReceived = false;
+
+  // Optionally reset the timer to broadcast immediately
+  // If you want to wait another 10 seconds before broadcasting, you can omit this line
+  _previousBroadcastMillis = millis() - 10000;
 }
 
 
 void calculateRotation(bool resetOffset) {
+       String messageToSend = "<" + gyro.GetSerializedGyroData() + ">";
+        connectionUDP.beginPacket(connectionUDP.remoteIP(), connectionPort);
+    connectionUDP.print(messageToSend);
+    connectionUDP.endPacket();
+
+
+
  // displayCalStatus();
   // sensors_event_t event;
   // bno.getEvent(&event);
