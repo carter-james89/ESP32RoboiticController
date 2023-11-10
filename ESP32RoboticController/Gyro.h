@@ -15,12 +15,17 @@ public:
     void update();
     void printData();
     GyroData GetGyroData(); // Function to get gyro data
-    String GetSerializedGyroData();
+    void GetSerializedGyroData(byte* byteArray, unsigned int &length);
+     void Calibrate(); 
 
 private:
     MPU6050 mpu;
     int16_t ax, ay, az;
     int16_t gx, gy, gz;
+
+     // Variables to store the offsets
+    int16_t ax_offset, ay_offset, az_offset;
+    int16_t gx_offset, gy_offset, gz_offset;
 };
 
 #endif // GYRO_H
