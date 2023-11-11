@@ -15,6 +15,11 @@ _kneeSegment = limbSegments[2];
 // Destructor
 RoboticLimb::~RoboticLimb() {}
 
+void RoboticLimb::SetLimbServos(float base, float hip, float knee){
+       _hipSegment->SetServo(0,hip);
+    _kneeSegment->SetServo(0,knee);
+}
+
 void RoboticLimb::CalculateIK(){
       std::cout << "Run IK!" << std::endl;
   // _hipSegment->SetServo(0,-50);

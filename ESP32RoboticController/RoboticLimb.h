@@ -21,6 +21,7 @@ RoboticLimb() ;
 
     void CalculateIK();
      void CalculateIK(double xPos,double yPos);
+     void SetLimbServos(float baseAngle, float hipAngle, float kneeAngle);
 
 private:
 float RadToDegree(float rad);

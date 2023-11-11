@@ -9,6 +9,7 @@ public:
 
     void writeMicroseconds(int value);
     void SetAngle(double position);
+    void Update();
 
 private:
     void attach();

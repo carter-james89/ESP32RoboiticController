@@ -34,6 +34,16 @@ void NetworkHandler::initialize(){
     broadcastUDP.begin(broadcastPort);
     connectionUDP.begin(connectionPort);
 }
+void NetworkHandler::subscribeToEvents(INetworkHandlerEventListener* listener) {
+    eventListeners.push_back(listener);
+}
+
+void NetworkHandler::SetRoboticController(RoboticController* rc){
+    roboticControler = rc;
+}
+
+
+
 void NetworkHandler::connectToWifi(){
        WiFi.begin(ssid, password);
     
@@ -60,13 +70,6 @@ void NetworkHandler::SendEmptyResponse(int header) {
     Serial.println("Sent empty response with header: " + String(header));
 }
 
-void NetworkHandler::setOnMessageReceivedCallback(void (*callback)(int, byte*, int)) {
-    onMessageReceived = callback;
-}
-
-void NetworkHandler::setOnConnectionTimeoutCallback(void (*callback)()) {
-    onConnectionTimeout = callback;
-}
 
 void NetworkHandler::sendBroadcast() {
     broadcastUDP.beginPacket("255.255.255.255", broadcastPort);
@@ -91,20 +94,23 @@ void NetworkHandler::sendMessage(int header, byte* message, int messageSize) {
 }
 
 void NetworkHandler::OnConnetionTimeout(){
-     if(firstTimeout){
-        Serial.println("tIMEOUT : Resend Message over connection");
-       // sendMessage(previousMessage);
-        firstTimeout = false;
-            lastResponseTime = millis();
-        return;
-     }
+    //  if(firstTimeout){
+    //     Serial.println("tIMEOUT : Resend Message over connection");
+    //    // sendMessage(previousMessage);
+    //     firstTimeout = false;
+    //         lastResponseTime = millis();
+    //     return;
+    //  }
      firstTimeout = true;
         broadcasting = true;
         // Reset the broadcast timer to immediately try broadcasting again
         _previousBroadcastMillis = millis() - 10000;
-       if (onConnectionTimeout) {
-            onConnectionTimeout(); // Call the timeout callback
-        }
+
+        roboticControler->OnConnectionTimeout1();
+    //    for (auto& listener : eventListeners) {
+    // if (listener != nullptr) {
+    //     listener->OnConnectionTimeout();
+    // }
 }
 
 void NetworkHandler::loop() {
@@ -129,6 +135,7 @@ void NetworkHandler::checkForIncomingPackets() {
         byte packetData[packetSize]; // No need for +1 since we're not working with strings here
         int bytesRead = connectionUDP.read(packetData, packetSize);
         if (bytesRead > 0) {
+           // Serial.print("got message");
             // Check if the packet contains at least the size of the header
             if (bytesRead >= sizeof(int)) {
                 // Extract the header from the packet
@@ -151,10 +158,33 @@ void NetworkHandler::checkForIncomingPackets() {
                 lastResponseTime = millis();
                 firstTimeout = true;
 
-                // Call the message received callback if it's set
-                if (onMessageReceived) {
-                    onMessageReceived(header, messageContent, messageSize);
-                }
+
+             
+std::vector<unsigned char> messageVector;
+// Only fill the vector if there is actual content
+if (messageContent && messageSize > 0) {
+    messageVector.assign(messageContent, messageContent + messageSize);
+}
+else{
+   //   Serial.print("empty message");
+}
+if (roboticControler != nullptr) {
+    roboticControler->OnMessageReceived1(header, messageVector);
+} else {
+    Serial.println("roboticControler is null!");
+}
+
+
+//Something is wrong with this
+// for (INetworkHandlerEventListener* listener : eventListeners) {
+//     if (listener != nullptr) {
+//          //Serial.print("send event");
+//         // Call a method on the listener
+//         // For example, if you have a method like OnEventOccurred()
+//          listener->OnMessageReceived(header, messageVector);
+//     }
+// }
+
 
                 // Clean up the allocated message content buffer
                 delete[] messageContent;
