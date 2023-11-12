@@ -21,6 +21,7 @@ public:
     void deactivate();
 
     void SetServo(int servoPosInList, double angle);
+    int GetServoAngle(int servoPosInList);
 
     double GetLength();
 

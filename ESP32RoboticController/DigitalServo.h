@@ -8,10 +8,12 @@ public:
     DigitalServo(int pin, int angleOffset,int pwmOffset, int minPWM, int maxPWM, int minAngleLimit,int maxAngleLimit,  bool flip);
 
     void writeMicroseconds(int value);
-    void SetAngle(double position);
+    void SetAngle(int position);
     void Update();
+    int GetAngle();
 
 private:
+int _angle;
     void attach();
     void detach();
     Servo _servo;

@@ -15,7 +15,7 @@ public:
     void update();
     void printData();
     GyroData GetGyroData(); // Function to get gyro data
-    void GetSerializedGyroData(byte* byteArray, unsigned int &length);
+    void GetSerializedGyroData(byte* &byteArray, unsigned int &length);
      void Calibrate(); 
 
 private:

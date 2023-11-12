@@ -14,7 +14,7 @@ public:
     void SendEmptyResponse(int header);
        void subscribeToEvents(INetworkHandlerEventListener* listener);
         void SetRoboticController(RoboticController* rc);
-      
+      void AttemptEstablishConnection();
 
 private:
     WiFiUDP broadcastUDP;
@@ -30,9 +30,11 @@ private:
     bool firstTimeout;
     byte* previousMessage; // Changed type to byte array
     int previousMessageSize; // Added to store the size of the previous message
-
+unsigned long syncMillis;    // The millis() value when the timestamp was set
    RoboticController* roboticControler;
 
+void OnConnectionEstablished();
+void OnConnectionLost();
     void OnConnetionTimeout();
 
     void sendBroadcast();

@@ -36,7 +36,10 @@ void Gyro::update() {
 // ... [other includes, constructors, and methods]
 
 void Gyro::Calibrate() {
-    // You might want to take multiple readings and average them for better accuracy
+    // You might want to take 
+    return;
+    
+    //multiple readings and average them for better accuracy
     update(); // Make sure we have the latest data
     
     // Cache the current sensor values as offsets
@@ -73,24 +76,36 @@ void Gyro::printData() {
     Serial.print(" Gyro Z: "); Serial.println(gz);
 }
 
-void Gyro::GetSerializedGyroData(byte* byteArray, unsigned int &length) {
+void Gyro::GetSerializedGyroData(byte* &byteArray, unsigned int &length) {
     update();
-    String json = "{";
-    json += "\"ax\":" + String(ax) + ",";
-    json += "\"ay\":" + String(ay) + ",";
-    json += "\"az\":" + String(az) + ",";
-    json += "\"gx\":" + String(gx) + ",";
-    json += "\"gy\":" + String(gy) + ",";
-    json += "\"gz\":" + String(gz);
-    json += "}";
 
-    // Ensure the byte array is large enough to hold the JSON string
-    length = json.length(); // Get the length of the JSON string
-    byteArray = new byte[length]; // Allocate memory for the byte array
+    // Create a JSON object
+    StaticJsonDocument<256> doc;
+    doc["ax"] = ax;
+    doc["ay"] = ay;
+    doc["az"] = az;
+    doc["gx"] = gx;
+    doc["gy"] = gy;
+    doc["gz"] = gz;
 
-    // Copy the JSON string into the byte array
-    json.getBytes(byteArray, length);
+    // Serialize JSON to string
+    String json;
+    serializeJson(doc, json);
+
+    // Check if byteArray is already allocated
+    if (byteArray != nullptr) {
+        delete[] byteArray; // Free existing memory
+    }
+
+    // Allocate memory for byteArray
+    length = json.length();
+    byteArray = new byte[length + 1]; // +1 for null-termination
+
+    // Copy the JSON string into byteArray
+    memcpy(byteArray, json.c_str(), length);
+    byteArray[length] = '\0'; // Null-terminate the string
 }
+
 
 GyroData Gyro::GetGyroData() {
     // Make sure to update the sensor data before returning

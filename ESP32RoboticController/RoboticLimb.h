@@ -3,6 +3,8 @@
 
 #include "LimbSegment.h"
 #include <iostream>
+#include "QuadrupedLimbData.h";
+#include <memory>
 
 class RoboticLimb {
 public:
@@ -22,6 +24,8 @@ RoboticLimb() ;
     void CalculateIK();
      void CalculateIK(double xPos,double yPos);
      void SetLimbServos(float baseAngle, float hipAngle, float kneeAngle);
+     void SerializeLimbData(std::vector<std::uint8_t>& message);
+      void GetServoValues(int servoValues[3]);
 
 private:
 float RadToDegree(float rad);
@@ -29,6 +33,7 @@ float RadToDegree(float rad);
      LimbSegment* _baseSegment; 
      LimbSegment* _hipSegment; 
      LimbSegment* _kneeSegment; 
+     std::vector<LimbSegment*> _limbSegments;
 };
 
 #endif // ROBOTICLIMB_H

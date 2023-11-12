@@ -60,16 +60,17 @@ void NetworkHandler::connectToWifi(){
 
 void NetworkHandler::SendEmptyResponse(int header) {
     // Create a packet that contains only the header
-    byte packet[sizeof(header)];
+    byte packet[0];
     memcpy(packet, &header, sizeof(header));
 
-    // Send the packet
-    connectionUDP.beginPacket(connectionUDP.remoteIP(), connectionPort);
-    connectionUDP.write(packet, sizeof(packet));
-    connectionUDP.endPacket();
-    Serial.println("Sent empty response with header: " + String(header));
-}
+    sendMessage(header,packet, sizeof(packet));
 
+    // Send the packet
+    // connectionUDP.beginPacket(connectionUDP.remoteIP(), connectionPort);
+    // connectionUDP.write(packet, sizeof(packet));
+    // connectionUDP.endPacket();
+  //  Serial.println("Sent empty response with header: " + String(header));
+}
 
 void NetworkHandler::sendBroadcast() {
     broadcastUDP.beginPacket("255.255.255.255", broadcastPort);
@@ -81,16 +82,29 @@ void NetworkHandler::sendBroadcast() {
 }
 
 void NetworkHandler::sendMessage(int header, byte* message, int messageSize) {
-    // Combine the header and the message into one packet
-    byte packet[sizeof(header) + messageSize];
-    memcpy(packet, &header, sizeof(header));
-    memcpy(packet + sizeof(header), message, messageSize);
+    // Get the current time since synchronization in milliseconds
+    unsigned long currentMillis = millis();
+    unsigned long timeSinceSync = currentMillis - syncMillis;
+    // Convert the timeSinceSync to a byte array
+    byte timeByteArray[sizeof(timeSinceSync)];
+    memcpy(timeByteArray, &timeSinceSync, sizeof(timeSinceSync));
 
+    // Calculate the total packet size (header + time + message)
+    int totalPacketSize = sizeof(header) + sizeof(timeSinceSync) + messageSize;
+
+    // Allocate a buffer for the combined packet
+    byte packet[totalPacketSize];
+
+    // Copy the header, time, and message into the packet
+    memcpy(packet, &header, sizeof(header));
+    memcpy(packet + sizeof(header), timeByteArray, sizeof(timeSinceSync));
+    memcpy(packet + sizeof(header) + sizeof(timeSinceSync), message, messageSize);
+
+//Serial.println("send packet");
     // Send the packet
     connectionUDP.beginPacket(connectionUDP.remoteIP(), connectionPort);
-    connectionUDP.write(packet, sizeof(packet));
+    connectionUDP.write(packet, totalPacketSize);
     connectionUDP.endPacket();
-   // Serial.println("Send Message over connection");
 }
 
 void NetworkHandler::OnConnetionTimeout(){
@@ -101,12 +115,13 @@ void NetworkHandler::OnConnetionTimeout(){
     //         lastResponseTime = millis();
     //     return;
     //  }
+        Serial.println("Connection timeout");
      firstTimeout = true;
-        broadcasting = true;
-        // Reset the broadcast timer to immediately try broadcasting again
-        _previousBroadcastMillis = millis() - 10000;
+       
 
         roboticControler->OnConnectionTimeout1();
+
+        OnConnectionLost();
     //    for (auto& listener : eventListeners) {
     // if (listener != nullptr) {
     //     listener->OnConnectionTimeout();
@@ -128,6 +143,28 @@ void NetworkHandler::loop() {
     }
 }
 
+void NetworkHandler::AttemptEstablishConnection(){
+      Serial.println("Attempt establish connection");
+      syncMillis = millis();
+ // Serial.println("Set sync time: " + syncMillis);
+   SendEmptyResponse(0);
+   OnConnectionEstablished();
+}
+
+void NetworkHandler:: OnConnectionEstablished(){
+    Serial.println("OnConnectionEstablished");
+                // Stop broadcasting since we've received a message
+                broadcasting = false;
+
+                // We received a message, so update the last response time
+                lastResponseTime = millis();
+                firstTimeout = true;
+}
+void NetworkHandler::OnConnectionLost(){
+ broadcasting = true;
+        // Reset the broadcast timer to immediately try broadcasting again
+        _previousBroadcastMillis = millis() - 10000;
+}
 void NetworkHandler::checkForIncomingPackets() {
     int packetSize = connectionUDP.parsePacket();
     if (packetSize) {
@@ -138,9 +175,15 @@ void NetworkHandler::checkForIncomingPackets() {
            // Serial.print("got message");
             // Check if the packet contains at least the size of the header
             if (bytesRead >= sizeof(int)) {
+                  lastResponseTime = millis();
                 // Extract the header from the packet
                 int header;
                 memcpy(&header, packetData, sizeof(header));
+
+                if(broadcasting && header !=0){
+                       Serial.println("Got header that isnt connection while broadcasting");
+                       return;
+                }
 
                 // Calculate the size of the actual message
                 int messageSize = bytesRead - sizeof(header);
@@ -150,14 +193,6 @@ void NetworkHandler::checkForIncomingPackets() {
 
                 // Copy the message content from the packet, skipping the header
                 memcpy(messageContent, packetData + sizeof(header), messageSize);
-
-                // Stop broadcasting since we've received a message
-                broadcasting = false;
-
-                // We received a message, so update the last response time
-                lastResponseTime = millis();
-                firstTimeout = true;
-
 
              
 std::vector<unsigned char> messageVector;

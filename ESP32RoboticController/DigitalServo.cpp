@@ -4,7 +4,7 @@
 #include <iostream>
 
 DigitalServo::DigitalServo(int pin, int angleOffset,int pwmOffset, int minPWM, int maxPWM, int minAngleLimit, int maxAngleLimit, bool flip)
-    : _servoPin(pin), _angleOffset(angleOffset), _pwmOffset(pwmOffset),_minPulseWidth(minPWM), _maxPulseWidth(maxPWM), _minAngleLimit(minAngleLimit), _maxAngleLimit(maxAngleLimit), _flip(flip) {
+    : _servoPin(pin), _angleOffset(angleOffset), _pwmOffset(pwmOffset),_minPulseWidth(minPWM), _maxPulseWidth(maxPWM), _minAngleLimit(minAngleLimit), _maxAngleLimit(maxAngleLimit), _flip(flip),_angle(0) {
     attach();
   //  writeMicroseconds(homePWM); // Set servo to home position on startup
   SetAngle(0);
@@ -34,9 +34,14 @@ void DigitalServo::writeMicroseconds(int value) {
     _servo.writeMicroseconds(value+_pwmOffset);
 }
 
-void DigitalServo::SetAngle(double angle) {
+int DigitalServo::GetAngle() {
+    return _angle;
+}
+
+void DigitalServo::SetAngle(int angle) {
 
     std::cout << "angle " << angle << std::endl;
+    _angle = angle;
     angle += _angleOffset;
         float desiredAngle = constrain(angle, _minAngleLimit,_maxAngleLimit);
 

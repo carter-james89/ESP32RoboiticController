@@ -30,6 +30,8 @@ public:
     void OnConnectionTimeout() override ;
  void OnConnectionTimeout1();
       void OnMessageReceived1(int messageType, const std::vector<unsigned char>& message);
+
+      void SendRobotInfo();
      
 
 private:
@@ -38,7 +40,7 @@ private:
     void runSensors();
     void calculateHeight();
      void EstablishConnection();
-
+ void SerializeInt(byte* message, int value, int& offset, int messageSize);
     bool activated;
      RoboticLimb _flLimb;
      RoboticLimb _frLimb;

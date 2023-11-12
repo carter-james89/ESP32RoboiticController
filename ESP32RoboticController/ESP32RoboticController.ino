@@ -31,16 +31,12 @@ void setup() {
 void loop() {
  
 _roboticController.RunControllerLoop();
-    delay(10);
-
+    delay(100);
 
     loopCount++; // Increment the loop counter
 
     // Check if a second has passed (1000 milliseconds)
     if (millis() - lastPrintTime >= 1000) {
-      //  Serial.print("Loops per second: ");
-      //  Serial.println(loopCount);
-
         // Reset the counter and the last print time
         loopCount = 0;
         lastPrintTime = millis();

@@ -2,6 +2,7 @@
 #include "RoboticLimb.h"
 #include "LimbSegment.h"
 #include <cmath>
+#include <memory>
 
 RoboticLimb::RoboticLimb() : activated(true) {}
 // Constructor
@@ -9,16 +10,54 @@ RoboticLimb::RoboticLimb(std::vector<LimbSegment*> limbSegments) : activated(tru
 _baseSegment = limbSegments[0];
 _hipSegment = limbSegments[1];
 _kneeSegment = limbSegments[2];
-
+_limbSegments = limbSegments;
 }
 
 // Destructor
 RoboticLimb::~RoboticLimb() {}
 
+
+ void RoboticLimb::GetServoValues(int servoValues[3]) {
+        // Populate servoValues
+        servoValues[0] = _baseSegment->GetServoAngle(0); // Replace with actual logic to get the first servo value
+        servoValues[1] = _hipSegment->GetServoAngle(0); // Replace with actual logic to get the second servo value
+        servoValues[2] = _kneeSegment->GetServoAngle(0); // Replace with actual logic to get the third servo value
+    }
+
 void RoboticLimb::SetLimbServos(float base, float hip, float knee){
        _hipSegment->SetServo(0,hip);
     _kneeSegment->SetServo(0,knee);
 }
+ void RoboticLimb::SerializeLimbData(std::vector<std::uint8_t>& message) {
+        for (const auto& segment : _limbSegments) {
+        int angle = segment->GetServoAngle(0);
+
+        //    const int messageSize = 3 * sizeof(int64_t) + 12 * sizeof(int);
+        // byte message[messageSize];
+        // int offset = 0;
+int offset =0;
+        // Serialize each integer
+
+
+        // Repeat for all other integer fields
+        //memcpy(message + offset, angle, sizeof(angle));
+        //offset += sizeof(angle);
+
+        // // Convert the int angle to bytes and append to the message
+        // std::uint8_t* angleBytes = reinterpret_cast<std::uint8_t*>(&angle);
+        // for (size_t i = 0; i < sizeof(int); ++i) {
+        //     message.push_back(angleBytes[i]);
+        // }
+    }
+     
+    }
+//    void RoboticLimb::SerializeLimbData(std::vector<std::uint8_t>& existingSerializedInts) {
+//         for (const auto& segment : _limbSegments) {
+//             int angle = segment->GetServoAngle(0);
+//             // Convert angle to byte and append to the vector
+//             existingSerializedInts.push_back(static_cast<std::uint8_t>(angle));
+//         }
+//     }
 
 void RoboticLimb::CalculateIK(){
       std::cout << "Run IK!" << std::endl;

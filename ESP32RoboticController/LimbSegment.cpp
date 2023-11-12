@@ -21,6 +21,10 @@ LimbSegment::LimbSegment() : isActive(true) {
     _servos[servoPosInList]->SetAngle(angle);
  }
 
+ int LimbSegment::GetServoAngle(int servoPosInList){
+    return _servos[servoPosInList]->GetAngle();
+ }
+
 // Destructor
 LimbSegment::~LimbSegment() {
     // Cleanup can be added here if necessary
