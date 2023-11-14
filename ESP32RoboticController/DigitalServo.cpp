@@ -1,10 +1,8 @@
 #include "DigitalServo.h"
-
-
 #include <iostream>
 
-DigitalServo::DigitalServo(int pin, int angleOffset,int pwmOffset, int minPWM, int maxPWM, int minAngleLimit, int maxAngleLimit, bool flip)
-    : _servoPin(pin), _angleOffset(angleOffset), _pwmOffset(pwmOffset),_minPulseWidth(minPWM), _maxPulseWidth(maxPWM), _minAngleLimit(minAngleLimit), _maxAngleLimit(maxAngleLimit), _flip(flip),_angle(0) {
+DigitalServo:: DigitalServo(DigitalServoConfiguration configData)
+    : configData(configData) {
     attach();
   //  writeMicroseconds(homePWM); // Set servo to home position on startup
   SetAngle(0);
@@ -15,7 +13,7 @@ void DigitalServo::attach() {
 
     // Attach the servo to the specified pin with the min and max pulse widths
     _servo.setPeriodHertz(50); // Standard 50hz servo
-    _servo.attach(_servoPin, _minPulseWidth, _maxPulseWidth);
+    _servo.attach(configData.pin, configData.minPWM, configData.maxPWM);
 }
 
 void DigitalServo::detach() {
@@ -30,11 +28,12 @@ void DigitalServo::Update()//called every esp32 loop
 void DigitalServo::writeMicroseconds(int value) {
     // Ensure the value is within the pulse width range
         std::cout << "pwm " << value << std::endl;
-    value = constrain(value, _minPulseWidth, _maxPulseWidth);
-    _servo.writeMicroseconds(value+_pwmOffset);
+    value = constrain(value, configData.minPWM, configData.maxPWM);
+    _servo.writeMicroseconds(value+configData.pwmOffset);
 }
 
 int DigitalServo::GetAngle() {
+     Serial.print("Angle at Servo : " + _angle);
     return _angle;
 }
 
@@ -42,14 +41,14 @@ void DigitalServo::SetAngle(int angle) {
 
     std::cout << "angle " << angle << std::endl;
     _angle = angle;
-    angle += _angleOffset;
-        float desiredAngle = constrain(angle, _minAngleLimit,_maxAngleLimit);
+    angle += configData.angleOffset;
+        float desiredAngle = constrain(angle, configData.minAngleLimit,configData.maxAngleLimit);
 
 
-  int pwmValue = map(desiredAngle, -135, 135, _maxPulseWidth, _minPulseWidth);
-  if(_flip)
+  int pwmValue = map(desiredAngle, -135, 135, configData.maxPWM, configData.minPWM);
+  if(configData.flip)
   {
-pwmValue = map(desiredAngle, 135, -135, _maxPulseWidth, _minPulseWidth);
+pwmValue = map(desiredAngle, 135, -135, configData.maxPWM, configData.minPWM);
   }
 writeMicroseconds(pwmValue);
 

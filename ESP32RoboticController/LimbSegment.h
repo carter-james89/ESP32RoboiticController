@@ -11,7 +11,7 @@ public:
     LimbSegment();
 
         // Constructor
-    LimbSegment(double length, std::vector<DigitalServo*> servos);
+    LimbSegment(float length, DigitalServo servo);
 
     // Destructor
     ~LimbSegment();
@@ -20,18 +20,16 @@ public:
     void activate();
     void deactivate();
 
-    void SetServo(int servoPosInList, double angle);
-    int GetServoAngle(int servoPosInList);
-
     double GetLength();
 
-     std::vector<DigitalServo*>  GetServos();
+int GetServoAngle();
+   void SetServoAngle(int newAngle);
 
 private:
     // Member variables can be added here
     bool isActive;
     double _length;
-   std::vector<DigitalServo*>  _servos; 
+   DigitalServo  _servo; 
 
 
 };

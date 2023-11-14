@@ -3,6 +3,7 @@
 
 #include "RoboticLimb.h"
 #include <memory>
+#include "DigitalServo.h"
 
 class QuadrupedConfiguration {
 public:
@@ -12,11 +13,17 @@ public:
     // Destructor
     virtual ~QuadrupedConfiguration();
 
-    // Pure virtual functions
-    virtual RoboticLimb GetFrontLeftLimb() = 0;
-    virtual RoboticLimb GetFrontRightLimb() = 0;
-    virtual RoboticLimb GetBackLeftLimb() = 0;
-    virtual RoboticLimb GetBackRightLimb() = 0;
-};
+//     struct LimbConfig {     
+// DigitalServo::DigitalServoConfiguration baseConfig;
+// DigitalServo::DigitalServoConfiguration hipConfig;
+// DigitalServo::DigitalServoConfiguration kneeConfig;
+// };
 
+    // Pure virtual functions
+    virtual RoboticLimb ConstructFrontLeftLimb()=0;
+    virtual RoboticLimb ConstructFrontRightLimb()=0;
+   virtual RoboticLimb ConstructBackRightLimb()=0;
+   virtual RoboticLimb ConstructBackLeftLimb()=0;
+};
+ 
 #endif // QUADRUPEDCONFIGURATION_H

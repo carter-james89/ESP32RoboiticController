@@ -7,14 +7,18 @@
 #include <vector>
 #include <iostream>
 
+
 class BittleQuadrupedConfiguration : public QuadrupedConfiguration {
 public:
     BittleQuadrupedConfiguration();
 
-    RoboticLimb GetFrontLeftLimb() override;
-    RoboticLimb GetFrontRightLimb() override;
-    RoboticLimb GetBackRightLimb() override;
-    RoboticLimb GetBackLeftLimb() override;
+      RoboticLimb ConstructFrontLeftLimb() override;
+    RoboticLimb ConstructFrontRightLimb() override;
+   RoboticLimb ConstructBackRightLimb() override;
+    RoboticLimb ConstructBackLeftLimb() override;
+
+    private:
+    RoboticLimb ConstructRoboticLimb( DigitalServo::DigitalServoConfiguration hipServo, DigitalServo::DigitalServoConfiguration kneeServo);
 };
 
 #endif // BITTLEQUADRUPEDCONFIGURATION_H

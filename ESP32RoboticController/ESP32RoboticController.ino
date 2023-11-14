@@ -25,7 +25,14 @@ void setup() {
   Serial.println("Robot bootup");
 
   BittleQuadrupedConfiguration config; 
-  _roboticController = RoboticController(&config); 
+
+  std::vector<RoboticLimb> limbs;
+  limbs.push_back(config.ConstructFrontLeftLimb());
+   limbs.push_back(config.ConstructFrontRightLimb());
+    limbs.push_back(config.ConstructBackRightLimb());
+     limbs.push_back(config.ConstructBackLeftLimb());
+
+  _roboticController = RoboticController(limbs); 
 
 }
 void loop() {

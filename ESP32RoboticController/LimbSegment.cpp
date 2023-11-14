@@ -1,4 +1,3 @@
-
 #include <iostream>
 
 #include "DigitalServo.h"
@@ -11,18 +10,18 @@ LimbSegment::LimbSegment() : isActive(true) {
     // Initialization can be added here
 }
 
- LimbSegment::LimbSegment(double length, std::vector<DigitalServo*> servos): isActive(true) 
+ LimbSegment::LimbSegment(float length, DigitalServo servo): isActive(true) 
  {
   _length = length;
-  _servos = servos;
+        // Create DigitalServo objects dynamically and store their pointers
+        _servo = servo;
  }
 
- void LimbSegment::SetServo(int servoPosInList, double angle){
-    _servos[servoPosInList]->SetAngle(angle);
+ void LimbSegment::SetServoAngle(int newAngle){
+_servo.SetAngle(newAngle);
  }
-
- int LimbSegment::GetServoAngle(int servoPosInList){
-    return _servos[servoPosInList]->GetAngle();
+ int LimbSegment::GetServoAngle(){
+    return _servo.GetAngle();
  }
 
 // Destructor
@@ -38,8 +37,4 @@ void LimbSegment::activate() {
 void LimbSegment::deactivate() {
     isActive = false;
     std::cout << "LimbSegment deactivated!" << std::endl;
-}
-
-std::vector<DigitalServo*>  LimbSegment::GetServos(){
-    return _servos;
 }

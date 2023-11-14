@@ -1,5 +1,7 @@
 #include "QuadrupedConfiguration.h"
 
+
+
 // Constructor implementation
 QuadrupedConfiguration::QuadrupedConfiguration() {
     // Constructor body (if needed)

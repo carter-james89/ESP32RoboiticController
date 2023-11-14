@@ -3,15 +3,17 @@
 
 #include "LimbSegment.h"
 #include <iostream>
-#include "QuadrupedLimbData.h";
+#include "QuadrupedLimbData.h"
 #include <memory>
+#include "DigitalServo.h"
 
 class RoboticLimb {
 public:
 
 RoboticLimb() ;
     // Constructor
-    RoboticLimb(std::vector<LimbSegment*>);
+
+    RoboticLimb(std::vector<LimbSegment> limbSegments);
 
     // Destructor
     ~RoboticLimb();
@@ -27,13 +29,15 @@ RoboticLimb() ;
      void SerializeLimbData(std::vector<std::uint8_t>& message);
       void GetServoValues(int servoValues[3]);
 
+ 
+
 private:
 float RadToDegree(float rad);
     bool activated;
-     LimbSegment* _baseSegment; 
-     LimbSegment* _hipSegment; 
-     LimbSegment* _kneeSegment; 
-     std::vector<LimbSegment*> _limbSegments;
+    //  LimbSegment _baseSegment; 
+    //  LimbSegment _hipSegment; 
+    //  LimbSegment _kneeSegment; 
+     std::vector<LimbSegment> limbSegments;
 };
 
 #endif // ROBOTICLIMB_H

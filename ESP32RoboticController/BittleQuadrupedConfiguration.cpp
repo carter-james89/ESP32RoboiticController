@@ -1,52 +1,107 @@
 #include "BittleQuadrupedConfiguration.h"
+#include "QuadrupedConfiguration.h"
+#include "LimbSegment.h"
+#include "DigitalServo.h"
 
 BittleQuadrupedConfiguration::BittleQuadrupedConfiguration() {
     // Initialize your BittleQuadrupedConfiguration object here if needed
 }
 
 
- std::vector<LimbSegment*>  BuildLimbSegments(int hipPin,int kneePin, int hipAngleOffset, int kneeAngleOffset,int hipPWMOffset,int kneePWMOffset, float hipMin, float hipMax, float kneeMin, float kneeMax, bool flipHip, bool flipKnee){
-        std::vector<DigitalServo*> hipServos;
-    std::vector<DigitalServo*> kneeServos;
 
-    int maxPWM = 2500;
-    int minPWM = 500;
-    int homePWM = (maxPWM + minPWM)/2;
+RoboticLimb BittleQuadrupedConfiguration::ConstructRoboticLimb( DigitalServo::DigitalServoConfiguration hipConfig, DigitalServo::DigitalServoConfiguration kneeConfig)
+{
+ LimbSegment baseSegment;
 
-    // Manually creating DigitalServo instances on the heap
-    DigitalServo* hipServo = new DigitalServo(hipPin, hipAngleOffset,hipPWMOffset, minPWM,maxPWM, hipMin, hipMax, flipHip);
-    DigitalServo* kneeServo = new DigitalServo(kneePin, kneeAngleOffset, kneePWMOffset, minPWM,maxPWM, kneeMin, kneeMax, flipKnee);
+    std::vector<LimbSegment> _limbSegments;
+    _limbSegments.push_back(baseSegment);
+    _limbSegments.push_back(LimbSegment(1,DigitalServo(hipConfig)));
+  _limbSegments.push_back(LimbSegment(1,DigitalServo(kneeConfig)));
 
-    hipServos.push_back(hipServo);
-    kneeServos.push_back(kneeServo);
-
-    // Creating the LimbSegment with the servos
-    LimbSegment* hipSegment = new LimbSegment(1, hipServos);
-    LimbSegment* kneeSegment = new LimbSegment(1, kneeServos);
-
-    std::vector<LimbSegment*> limbSegments;
-    limbSegments.push_back(nullptr); // Assuming the first segment is null
-    limbSegments.push_back(hipSegment);
-    limbSegments.push_back(kneeSegment);
-    return limbSegments;
+    return RoboticLimb(_limbSegments);
 }
 
-RoboticLimb BittleQuadrupedConfiguration::GetFrontLeftLimb() {
-      //  return RoboticLimb(BuildLimbSegments(33,19,0,0,-135,135,-135,135,false,true));
-    return RoboticLimb(BuildLimbSegments(33,19,-45,-45,40,0,-135,135,-135,135,false,true));
+RoboticLimb BittleQuadrupedConfiguration::ConstructFrontLeftLimb() {
+
+    DigitalServo::DigitalServoConfiguration hipConfig;
+hipConfig.pin = 22;
+hipConfig.angleOffset = -45;
+hipConfig.pwmOffset = 0;
+hipConfig.maxAngleLimit = 135;
+hipConfig.minAngleLimit = -135;
+hipConfig.flip = false;
+
+    DigitalServo::DigitalServoConfiguration kneeConfig;
+kneeConfig.pin = 19;
+kneeConfig.angleOffset = -45;
+kneeConfig.pwmOffset = 0;
+kneeConfig.maxAngleLimit = 135;
+kneeConfig.minAngleLimit = -135;
+kneeConfig.flip = false;
+
+   return ConstructRoboticLimb(hipConfig,kneeConfig);
 }
 
-RoboticLimb BittleQuadrupedConfiguration::GetFrontRightLimb() {
-        return RoboticLimb(BuildLimbSegments(5,4,-45,-45,0,0,-135,135,-135,135,true,false));
-      //   return RoboticLimb(BuildLimbSegments(5,4,0,0,-135,135,-135,135,true,false));
+
+
+RoboticLimb BittleQuadrupedConfiguration::ConstructFrontRightLimb() {
+
+        DigitalServo::DigitalServoConfiguration hipConfig;
+hipConfig.pin = 5;
+hipConfig.angleOffset = -45;
+hipConfig.pwmOffset = 0;
+hipConfig.maxAngleLimit = 135;
+hipConfig.minAngleLimit = -135;
+hipConfig.flip = true;
+
+    DigitalServo::DigitalServoConfiguration kneeConfig;
+kneeConfig.pin = 4;
+kneeConfig.angleOffset = -45;
+kneeConfig.pwmOffset = 0;
+kneeConfig.maxAngleLimit = 135;
+kneeConfig.minAngleLimit = -135;
+kneeConfig.flip = false;
+
+      return ConstructRoboticLimb(hipConfig,kneeConfig);
 }
 
-RoboticLimb BittleQuadrupedConfiguration::GetBackRightLimb() {
-        return RoboticLimb(BuildLimbSegments(15,2,45,-45,80,0,-135,135,-135,135,true,false));
-       //    return RoboticLimb(BuildLimbSegments(15,2,0,0,-135,135,-135,135,true,false));
+
+RoboticLimb BittleQuadrupedConfiguration::ConstructBackRightLimb() {
+        DigitalServo::DigitalServoConfiguration hipConfig;
+hipConfig.pin = 15;
+hipConfig.angleOffset = -45;
+hipConfig.pwmOffset = 80;
+hipConfig.maxAngleLimit = 135;
+hipConfig.minAngleLimit = -135;
+hipConfig.flip = false;
+
+    DigitalServo::DigitalServoConfiguration kneeConfig;
+kneeConfig.pin = 2;
+kneeConfig.angleOffset = -45;
+kneeConfig.pwmOffset = 0;
+kneeConfig.maxAngleLimit = 135;
+kneeConfig.minAngleLimit = -135;
+kneeConfig.flip = false;
+
+  return ConstructRoboticLimb(hipConfig,kneeConfig);
 }
 
-RoboticLimb BittleQuadrupedConfiguration::GetBackLeftLimb() {
-       return RoboticLimb(BuildLimbSegments(14,27,45,-45,20,80,-135,135,-135,135,false,true));
-      //    return RoboticLimb(BuildLimbSegments(14,27,0,0,-135,135,-135,135,false,true));
+RoboticLimb BittleQuadrupedConfiguration::ConstructBackLeftLimb() {
+        DigitalServo::DigitalServoConfiguration hipConfig;
+hipConfig.pin = 14;
+hipConfig.angleOffset = -45;
+hipConfig.pwmOffset = 20;
+hipConfig.maxAngleLimit = 135;
+hipConfig.minAngleLimit = -135;
+hipConfig.flip = true;
+
+    DigitalServo::DigitalServoConfiguration kneeConfig;
+kneeConfig.pin = 27;
+kneeConfig.angleOffset = -45;
+kneeConfig.pwmOffset = 80;
+kneeConfig.maxAngleLimit = 135;
+kneeConfig.minAngleLimit = -135;
+kneeConfig.flip = true;
+
+  return ConstructRoboticLimb(hipConfig,kneeConfig);
 }

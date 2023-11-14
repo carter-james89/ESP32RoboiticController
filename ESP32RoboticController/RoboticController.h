@@ -13,7 +13,7 @@ public:
   // Default constructor
     RoboticController();
     // Constructor
-    RoboticController(QuadrupedConfiguration* config);
+    RoboticController(std::vector<RoboticLimb> limbs);
 
     // Destructor
     ~RoboticController();
