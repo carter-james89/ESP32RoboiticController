@@ -60,11 +60,6 @@ RoboticController::RoboticController(std::vector<RoboticLimb> limbs) : activated
  //   networkHandler.initialize();
   
   _limbs = limbs;
-   _flLimb = limbs[0];
-  _frLimb = limbs[1];
-  _brLimb = limbs[2];
-  _blLimb = limbs[3];
-
    //   gyro.begin();
    Serial.println("Robot Configured");
  Serial.println("set start angles");
@@ -183,10 +178,10 @@ void RoboticController::SendRobotInfo() {
         int servoValues[3];
 
         // Populate servo values for each limb
-        _flLimb.GetServoValues(servoValues);
-        data.FLBaseAngle = servoValues[0];
-        data.FLHipAngle = servoValues[1];
-        data.FLKneeAngle = servoValues[2];
+        // _flLimb.GetServoValues(servoValues);
+        // data.FLBaseAngle = servoValues[0];
+        // data.FLHipAngle = servoValues[1];
+        // data.FLKneeAngle = servoValues[2];
 
         // _frLimb.GetServoValues(servoValues);
         // data.FRBaseAngle = servoValues[0];
