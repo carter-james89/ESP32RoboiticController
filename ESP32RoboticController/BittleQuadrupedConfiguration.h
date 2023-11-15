@@ -18,7 +18,7 @@ public:
     RoboticLimb ConstructBackLeftLimb() override;
 
     private:
-    RoboticLimb ConstructRoboticLimb( DigitalServo::DigitalServoConfiguration hipServo, DigitalServo::DigitalServoConfiguration kneeServo);
+    RoboticLimb ConstructRoboticLimb( String name, DigitalServoConfiguration hipServo, DigitalServoConfiguration kneeServo);
 };
 
 #endif // BITTLEQUADRUPEDCONFIGURATION_H

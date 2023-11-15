@@ -11,7 +11,7 @@
 class RoboticController : public INetworkHandlerEventListener {
 public:
   // Default constructor
-    RoboticController();
+   RoboticController();
     // Constructor
     RoboticController(std::vector<RoboticLimb> limbs);
 
@@ -42,10 +42,7 @@ private:
      void EstablishConnection();
  void SerializeInt(byte* message, int value, int& offset, int messageSize);
     bool activated;
-     RoboticLimb _flLimb;
-     RoboticLimb _frLimb;
-     RoboticLimb _brLimb;
-     RoboticLimb _blLimb;
+   std::vector<RoboticLimb> _limbs;
 };
 
 #endif // ROBOTICCONTROLLER_H

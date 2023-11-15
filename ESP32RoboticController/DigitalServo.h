@@ -3,9 +3,8 @@
 
 #include <ESP32Servo.h>
 
-class DigitalServo {
-public:
-  struct DigitalServoConfiguration{
+  class DigitalServoConfiguration{
+    public:
     int pin;
      int angleOffset;
      int pwmOffset;
@@ -16,9 +15,13 @@ public:
           bool flip;
           };
 
+class DigitalServo {
+public:
+
+
           DigitalServo();
 
-    DigitalServo(DigitalServoConfiguration configData);
+    DigitalServo(DigitalServoConfiguration buildData);
     void writeMicroseconds(int value);
     void SetAngle(int position);
     void Update();
@@ -27,9 +30,12 @@ public:
 private:
 DigitalServoConfiguration configData;
 int _angle;
+    Servo _servo;
+       int _minPWM;
     void attach();
     void detach();
-    Servo _servo;
+
+    int Map(int x, int in_min, int in_max, int out_min, int out_max) ;
 };
 
 #endif // DIGITALSERVO_H

@@ -1,40 +1,32 @@
 #include <iostream>
 #include "RoboticLimb.h"
 #include "LimbSegment.h"
+#include "DigitalServo.h"
 #include <cmath>
 #include <memory>
 
-//RoboticLimb::RoboticLimb() : activated(true) {}
+RoboticLimb::RoboticLimb() : activated(true) {}
 // Constructor
 
-RoboticLimb::RoboticLimb(std::vector<LimbSegment> limbSegments) {
-    std::vector<DigitalServo> servos;
-limbSegments = limbSegments;
-}
+
 
 RoboticLimb::~RoboticLimb() {
 }
 
-
-
-void RoboticLimb::GetServoValues(int servoValues[3]) {
-      Serial.print("Servo Angle: ");
-   // servoValues[0] = _baseSegment.GetServoAngle(0); // Get the first servo value
-   // servoValues[1] = _hipSegment.GetServoAngle(0);  // Get the second servo value
-   // servoValues[2] = _kneeSegment.GetServoAngle(0); // Get the third servo value
-
-    // Logging the values
-    Serial.print("Base Servo Angle: ");
-    Serial.println(servoValues[0]);
-    Serial.print("Hip Servo Angle: ");
-    Serial.println(servoValues[1]);
-    Serial.print("Knee Servo Angle: ");
-    Serial.println(servoValues[2]);
+RoboticLimb::RoboticLimb(String name, std::vector<LimbSegment> limbSegments): _name(name) {
+    this->limbSegments = limbSegments;
+    Serial.print("make ");
+    _name = name;
+    Serial.println(_name);
 }
 
 
-void RoboticLimb::SetLimbServos(float base, float hip, float knee){
-
+void RoboticLimb::SetLimbServos(int base, int hip, int knee){
+    Serial.print("set servos at ");
+Serial.println(_name);
+    //return;
+  limbSegments[1].SetServoAngle(hip);
+     limbSegments[2].SetServoAngle(knee);
 }
  void RoboticLimb::SerializeLimbData(std::vector<std::uint8_t>& message) {
        // for (const auto& segment : _limbSegments) {
@@ -57,6 +49,14 @@ void RoboticLimb::SetLimbServos(float base, float hip, float knee){
         //     message.push_back(angleBytes[i]);
         // }
     }
+
+    void RoboticLimb::GetServoValues(int servoValues[3]) {
+        Serial.print("get servos at ");
+        Serial.println(_name);
+ servoValues[0] = 0;
+ servoValues[1] = limbSegments[1].GetServoAngle();
+  servoValues[2] = limbSegments[2].GetServoAngle();
+}
      
     //}
 //    void RoboticLimb::SerializeLimbData(std::vector<std::uint8_t>& existingSerializedInts) {

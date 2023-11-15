@@ -8,10 +8,10 @@
 class LimbSegment {
 public:
     // Constructor
-    LimbSegment();
+    LimbSegment(String name);
 
         // Constructor
-    LimbSegment(float length, DigitalServo servo);
+    LimbSegment(String name, float length, DigitalServo servo);
 
     // Destructor
     ~LimbSegment();
@@ -30,6 +30,7 @@ private:
     bool isActive;
     double _length;
    DigitalServo  _servo; 
+   String _name;
 
 
 };

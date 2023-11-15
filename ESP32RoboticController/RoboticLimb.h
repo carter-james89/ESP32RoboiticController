@@ -5,7 +5,6 @@
 #include <iostream>
 #include "QuadrupedLimbData.h"
 #include <memory>
-#include "DigitalServo.h"
 
 class RoboticLimb {
 public:
@@ -13,7 +12,7 @@ public:
 RoboticLimb() ;
     // Constructor
 
-    RoboticLimb(std::vector<LimbSegment> limbSegments);
+    RoboticLimb(String name, std::vector<LimbSegment> limbSegments);
 
     // Destructor
     ~RoboticLimb();
@@ -25,7 +24,7 @@ RoboticLimb() ;
 
     void CalculateIK();
      void CalculateIK(double xPos,double yPos);
-     void SetLimbServos(float baseAngle, float hipAngle, float kneeAngle);
+     void SetLimbServos(int baseAngle, int hipAngle, int kneeAngle);
      void SerializeLimbData(std::vector<std::uint8_t>& message);
       void GetServoValues(int servoValues[3]);
 
@@ -34,6 +33,7 @@ RoboticLimb() ;
 private:
 float RadToDegree(float rad);
     bool activated;
+    String _name;
     //  LimbSegment _baseSegment; 
     //  LimbSegment _hipSegment; 
     //  LimbSegment _kneeSegment; 

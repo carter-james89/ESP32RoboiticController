@@ -1,6 +1,7 @@
-#include "RoboticController.h"
+
 #include <iostream>
 #include "RoboticLimb.h"
+#include "RoboticController.h"
 #include "QuadrupedLimbData.h"
 #include "Gyro.h"
 #include "QuadrupedConfiguration.h"
@@ -54,19 +55,75 @@ RoboticController::RoboticController(std::vector<RoboticLimb> limbs) : activated
     ESP32PWM::allocateTimer(2);
     ESP32PWM::allocateTimer(3);
 
-  networkHandler.subscribeToEvents(this);
-  networkHandler.SetRoboticController(this);
-    networkHandler.initialize();
+ // networkHandler.subscribeToEvents(this);
+  //networkHandler.SetRoboticController(this);
+ //   networkHandler.initialize();
   
-  
+  _limbs = limbs;
    _flLimb = limbs[0];
-   _frLimb = limbs[1];
-   _brLimb = limbs[2];
-   _blLimb = limbs[3];
+  _frLimb = limbs[1];
+  _brLimb = limbs[2];
+  _blLimb = limbs[3];
 
-      gyro.begin();
+   //   gyro.begin();
    Serial.println("Robot Configured");
+ Serial.println("set start angles");
 
+int baseAngle = 0;
+int hipAngle = 40;
+int kneeAngle = 133;
+
+for (auto& limb : _limbs) {
+  
+    limb.SetLimbServos(baseAngle,hipAngle,kneeAngle);
+  }
+
+    //    _flLimb.SetLimbServos(baseAngle,hipAngle,kneeAngle);//setting individually does
+    //    _frLimb.SetLimbServos(baseAngle,hipAngle,kneeAngle);
+    //       _brLimb.SetLimbServos(baseAngle,hipAngle,kneeAngle);
+    //       _blLimb.SetLimbServos(baseAngle,hipAngle,kneeAngle);
+ 
+
+    int servoValues[3]{0,0,0};
+
+
+Serial.println("attempt to read angle");
+for (auto& limb : _limbs) {
+       limb.GetServoValues(servoValues);
+       for (size_t i = 0; i < 3; i++)
+       {
+          Serial.println("Read angle ");
+          Serial.println(servoValues[i]);
+       }    
+   }
+
+// _flLimb.GetServoValues(servoValues); //getting them individually does
+//        for (size_t i = 0; i < 3; i++)
+//        {
+//           Serial.println("Read angle ");
+//           Serial.println(servoValues[i]);
+//        }
+
+//    _frLimb.GetServoValues(servoValues);
+//        for (size_t i = 0; i < 3; i++)
+//        {
+//           Serial.println("Read angle ");
+//           Serial.println(servoValues[i]);
+//        }
+// _brLimb.GetServoValues(servoValues);
+//        for (size_t i = 0; i < 3; i++)
+//        {
+//           Serial.println("Read angle ");
+//           Serial.println(servoValues[i]);
+//        }
+
+//    _blLimb.GetServoValues(servoValues);
+//        for (size_t i = 0; i < 3; i++)
+//        {
+//           Serial.println("Read angle ");
+//           Serial.println(servoValues[i]);
+//        }
+ 
 }
 
 void RoboticController::OnMessageReceived1(int messageType, const std::vector<unsigned char>& message) 
@@ -86,7 +143,6 @@ void RoboticController::OnMessageReceived1(int messageType, const std::vector<un
         // ... other cases ...
     }
     }
-
     
 void RoboticController::OnMessageReceived(int messageType, const std::vector<unsigned char>& message) {
     Serial.println("Message received in RoboticController.");
@@ -94,12 +150,12 @@ void RoboticController::OnMessageReceived(int messageType, const std::vector<uns
 
 void RoboticController::SetLimbs(QuadrupedLimbData* limbData)
 {
-    if (limbData != nullptr) {
-        _blLimb.SetLimbServos(limbData->BLBaseAngle,limbData->BLHipAngle,limbData->BLKneeAngle);
-           _flLimb.SetLimbServos(limbData->FLBaseAngle,limbData->FLHipAngle,limbData->FLKneeAngle);
-              _blLimb.SetLimbServos(limbData->BLBaseAngle,limbData->BLHipAngle,limbData->BLKneeAngle);
-                 _brLimb.SetLimbServos(limbData->BRBaseAngle,limbData->BRHipAngle,limbData->BRKneeAngle);
-    }
+    // if (limbData != nullptr) {
+    //     _blLimb.SetLimbServos(limbData->BLBaseAngle,limbData->BLHipAngle,limbData->BLKneeAngle);
+    //        _flLimb.SetLimbServos(limbData->FLBaseAngle,limbData->FLHipAngle,limbData->FLKneeAngle);
+    //           _blLimb.SetLimbServos(limbData->BLBaseAngle,limbData->BLHipAngle,limbData->BLKneeAngle);
+    //              _brLimb.SetLimbServos(limbData->BRBaseAngle,limbData->BRHipAngle,limbData->BRKneeAngle);
+    // }
 }
 
 // Destructor
