@@ -20,11 +20,11 @@ LimbSegment::LimbSegment(String name) : isActive(true){
  }
 
  void LimbSegment::SetServoAngle(int newAngle){
-  Serial.println(_name);
+ // Serial.println(_name);
 _servo.SetAngle(newAngle);
  }
  int LimbSegment::GetServoAngle(){
-      Serial.println(_name);
+   //   Serial.println(_name);
     return _servo.GetAngle();
  }
 

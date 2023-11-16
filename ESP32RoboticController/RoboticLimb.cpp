@@ -51,8 +51,8 @@ Serial.println(_name);
     }
 
     void RoboticLimb::GetServoValues(int servoValues[3]) {
-        Serial.print("get servos at ");
-        Serial.println(_name);
+       // Serial.print("get servos at ");
+       // Serial.println(_name);
  servoValues[0] = 0;
  servoValues[1] = limbSegments[1].GetServoAngle();
   servoValues[2] = limbSegments[2].GetServoAngle();

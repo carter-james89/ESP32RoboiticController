@@ -48,9 +48,10 @@ void NetworkHandler::connectToWifi(){
        WiFi.begin(ssid, password);
     
   while (WiFi.status() != WL_CONNECTED) {
-    delay(20000);
-    Serial.print("Attempting to Connect to WIFI : ");
+      Serial.print("Attempting to Connect to WIFI : ");
     Serial.println(ssid);
+    delay(10000);
+  
   }
 
   Serial.println("Connected to WiFi");

@@ -43,94 +43,59 @@ NetworkHandler networkHandler(8081,  10000);
 
   // Default constructor
     // In your RoboticController.cpp
-RoboticController::RoboticController() : activated(false) {
+RoboticController::RoboticController() : activated(false), connectedToClient(false) {
     // Initialize your controller without a configuration
 }
 // Constructor
-RoboticController::RoboticController(std::vector<RoboticLimb> limbs) : activated(true) 
+RoboticController::RoboticController(std::vector<RoboticLimb> limbs) : activated(true) , connectedToClient(false) 
 {
     std::cout << "Robotic controller activated!" << std::endl;
     ESP32PWM::allocateTimer(0);
     ESP32PWM::allocateTimer(1);
     ESP32PWM::allocateTimer(2);
-    ESP32PWM::allocateTimer(3);
-
- // networkHandler.subscribeToEvents(this);
-  //networkHandler.SetRoboticController(this);
- //   networkHandler.initialize();
-  
+    ESP32PWM::allocateTimer(3);  
   _limbs = limbs;
-   //   gyro.begin();
-   Serial.println("Robot Configured");
+
  Serial.println("set start angles");
 
 int baseAngle = 0;
-int hipAngle = 40;
-int kneeAngle = 133;
+int hipAngle = 0;
+int kneeAngle = 0;
 
 for (auto& limb : _limbs) {
   
     limb.SetLimbServos(baseAngle,hipAngle,kneeAngle);
   }
-
-    //    _flLimb.SetLimbServos(baseAngle,hipAngle,kneeAngle);//setting individually does
-    //    _frLimb.SetLimbServos(baseAngle,hipAngle,kneeAngle);
-    //       _brLimb.SetLimbServos(baseAngle,hipAngle,kneeAngle);
-    //       _blLimb.SetLimbServos(baseAngle,hipAngle,kneeAngle);
- 
-
     int servoValues[3]{0,0,0};
 
 
-Serial.println("attempt to read angle");
-for (auto& limb : _limbs) {
-       limb.GetServoValues(servoValues);
-       for (size_t i = 0; i < 3; i++)
-       {
-          Serial.println("Read angle ");
-          Serial.println(servoValues[i]);
-       }    
-   }
+// Serial.println("attempt to read angles");
+// for (auto& limb : _limbs) {
+//        limb.GetServoValues(servoValues);
+//        for (size_t i = 0; i < 3; i++)
+//        {
+//           Serial.println("Read angle ");
+//           Serial.println(servoValues[i]);
+//        }    
+//    }
 
-// _flLimb.GetServoValues(servoValues); //getting them individually does
-//        for (size_t i = 0; i < 3; i++)
-//        {
-//           Serial.println("Read angle ");
-//           Serial.println(servoValues[i]);
-//        }
-
-//    _frLimb.GetServoValues(servoValues);
-//        for (size_t i = 0; i < 3; i++)
-//        {
-//           Serial.println("Read angle ");
-//           Serial.println(servoValues[i]);
-//        }
-// _brLimb.GetServoValues(servoValues);
-//        for (size_t i = 0; i < 3; i++)
-//        {
-//           Serial.println("Read angle ");
-//           Serial.println(servoValues[i]);
-//        }
-
-//    _blLimb.GetServoValues(servoValues);
-//        for (size_t i = 0; i < 3; i++)
-//        {
-//           Serial.println("Read angle ");
-//           Serial.println(servoValues[i]);
-//        }
- 
+      gyro.begin();
+   Serial.println("Robot Configured");
+    networkHandler.subscribeToEvents(this);
+  networkHandler.SetRoboticController(this);
+   networkHandler.initialize();
 }
 
 void RoboticController::OnMessageReceived1(int messageType, const std::vector<unsigned char>& message) 
 { 
-    Serial.println(messageType);
+  //  Serial.println(messageType);
    switch (messageType) {
         case 0:  // Connection established, sync time
             EstablishConnection();
            // gyro.Calibrate();
             break;
         case 1:  // Return sensor data
-         SendRobotInfo();
+      //  SendRobotInfo();
             break;
         case 2:  // Set motor values
           //  runSensors();
@@ -145,12 +110,6 @@ void RoboticController::OnMessageReceived(int messageType, const std::vector<uns
 
 void RoboticController::SetLimbs(QuadrupedLimbData* limbData)
 {
-    // if (limbData != nullptr) {
-    //     _blLimb.SetLimbServos(limbData->BLBaseAngle,limbData->BLHipAngle,limbData->BLKneeAngle);
-    //        _flLimb.SetLimbServos(limbData->FLBaseAngle,limbData->FLHipAngle,limbData->FLKneeAngle);
-    //           _blLimb.SetLimbServos(limbData->BLBaseAngle,limbData->BLHipAngle,limbData->BLKneeAngle);
-    //              _brLimb.SetLimbServos(limbData->BRBaseAngle,limbData->BRHipAngle,limbData->BRKneeAngle);
-    // }
 }
 
 // Destructor
@@ -162,9 +121,6 @@ void serializeQuadrupedData(const QuadrupedData& data, uint8_t* buffer) {
 
 void RoboticController::SendRobotInfo() {
     try {
-        Serial.println("Broadcast robot info.");
-
-        // Create an instance of QuadrupedData
         QuadrupedData data;
 
         data.VelocityX = 0;
@@ -174,73 +130,71 @@ void RoboticController::SendRobotInfo() {
         data.GyroY = 0;
         data.GyroZ = 0;
 
-        // // Temporary array to hold servo values for each limb
         int servoValues[3];
+int limbCount = 0;
+        for (auto& limb : _limbs) {
 
-        // Populate servo values for each limb
-        // _flLimb.GetServoValues(servoValues);
-        // data.FLBaseAngle = servoValues[0];
-        // data.FLHipAngle = servoValues[1];
-        // data.FLKneeAngle = servoValues[2];
-
-        // _frLimb.GetServoValues(servoValues);
-        // data.FRBaseAngle = servoValues[0];
-        // data.FRHipAngle = servoValues[1];
-        // data.FRKneeAngle = servoValues[2];
-
-        // _brLimb.GetServoValues(servoValues);
-        // data.BRBaseAngle = servoValues[0];
-        // data.BRHipAngle = servoValues[1];
-        // data.BRKneeAngle = servoValues[2];
-
-        // _blLimb.GetServoValues(servoValues);
-        // data.BLBaseAngle = servoValues[0];
-        // data.BLHipAngle = servoValues[1];
-        // data.BLKneeAngle = servoValues[2];
-
+  limb.GetServoValues(servoValues);
+if(limbCount == 0){
+   
+       data.FLBaseAngle = servoValues[0];
+        data.FLHipAngle = servoValues[1];
+        data.FLKneeAngle = servoValues[2];
+}
+else if(limbCount == 1){
+    data.FRBaseAngle = servoValues[0];
+        data.FRHipAngle = servoValues[1];
+        data.FRKneeAngle = servoValues[2];
+}
+else if(limbCount == 2){
+       data.BRBaseAngle = servoValues[0];
+        data.BRHipAngle = servoValues[1];
+        data.BRKneeAngle = servoValues[2];
+}
+else if(limbCount == 3){
+      data.BLBaseAngle = servoValues[0];
+        data.BLHipAngle = servoValues[1];
+        data.BLKneeAngle = servoValues[2];
+}
+limbCount++;
+        }
         uint8_t* buffer = new uint8_t[sizeof(QuadrupedData)];
+       
         serializeQuadrupedData(data, buffer);
-  Serial.println("Data ready to be sent.");
         networkHandler.sendMessage(1, buffer, sizeof(QuadrupedData));
-
+  return;
         delete[] buffer;
     } catch (const std::exception& e) {
         Serial.print("Exception caught: ");
         Serial.println(e.what());
-        // Optionally: rethrow the exception if you cannot handle it
-        // throw;
     } catch (...) {
         Serial.println("Unknown exception caught");
-        // Optionally: rethrow the exception
-        // throw;
     }
 }
 
 
-
-
 void RoboticController::RunControllerLoop(){
+   // Serial.println(connectedToClient);
+if(!networkHandler.broadcasting){
+ SendRobotInfo();
+}
+   
      networkHandler.loop();
-   // _blLimb.CalculateIK();
-   // _frLimb.CalculateIK();
-   // _brLimb.CalculateIK();
-   // _flLimb.CalculateIK();
 }
 
 void RoboticController::OnConnectionTimeout(){
-
+connectedToClient = false;
 }
 void RoboticController::OnConnectionTimeout1(){
-
+connectedToClient = false;
 }
 
 
 void RoboticController::EstablishConnection() {
- // Serial.print("Connection Request Received : ");
-
+  Serial.print("Connection Request Received : ");
+connectedToClient = true;
+Serial1.println(connectedToClient);
   networkHandler.AttemptEstablishConnection();
-
-
 }
 
 // Activate the robotic controller

@@ -25,7 +25,7 @@ RoboticLimb BittleQuadrupedConfiguration::ConstructRoboticLimb(String name, Digi
 RoboticLimb BittleQuadrupedConfiguration::ConstructFrontLeftLimb() {
 
     DigitalServoConfiguration hipConfig;
-hipConfig.pin = 22;
+hipConfig.pin = 33;
 hipConfig.angleOffset = -45;
 hipConfig.pwmOffset = 0;
 hipConfig.minPWM = 500;
@@ -90,8 +90,6 @@ hipConfig.flip = false;
 kneeConfig.pin = 2;
 kneeConfig.angleOffset = -45;
 kneeConfig.pwmOffset = 0;
-kneeConfig.minPWM = 500;
-kneeConfig.maxPWM = 2500;
 kneeConfig.minPWM = 500;
 kneeConfig.maxPWM = 2500;
 kneeConfig.maxAngleLimit = 135;

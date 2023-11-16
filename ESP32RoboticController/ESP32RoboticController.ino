@@ -45,11 +45,11 @@ void setup() {
 
 }
 void loop() {
-   delay(1000);
+   delay(100);
 
- return;
+// return;
 _roboticController.RunControllerLoop();
-    delay(100);
+   // delay(100);
 
     loopCount++; // Increment the loop counter
 

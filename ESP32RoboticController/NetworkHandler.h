@@ -7,6 +7,7 @@
 
 class NetworkHandler {
 public:
+  bool broadcasting;
     NetworkHandler(int cPort, unsigned long timeout);
     void initialize(); 
     void loop();
@@ -24,7 +25,7 @@ private:
     int broadcastPort;
     int connectionPort;
     String broadcastIP;
-    bool broadcasting;
+  
     unsigned long _previousBroadcastMillis; // Changed type to unsigned long
     String connectionDataJson;
     bool firstTimeout;

@@ -35,14 +35,16 @@ public:
      
 
 private:
+   bool activated;
+    bool connectedToClient;
+   std::vector<RoboticLimb> _limbs;
  void RunSpeedTest();
     void calculateRotation(bool resetOffset);
     void runSensors();
     void calculateHeight();
      void EstablishConnection();
  void SerializeInt(byte* message, int value, int& offset, int messageSize);
-    bool activated;
-   std::vector<RoboticLimb> _limbs;
+ 
 };
 
 #endif // ROBOTICCONTROLLER_H

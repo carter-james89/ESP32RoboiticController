@@ -9,14 +9,14 @@ DigitalServo::DigitalServo(DigitalServoConfiguration buildData)
 //servoPin(pin), _angleOffset(angleOffset), _pwmOffset(pwmOffset),_minPulseWidth(minPWM), _maxPulseWidth(maxPWM), _minAngleLimit(minAngleLimit), _maxAngleLimit(maxAngleLimit), _flip(flip),_angle(0)
 
 //Serial.println("servo");
- //   attach();
+   attach();
   //  writeMicroseconds(homePWM); // Set servo to home position on startup
   //SetAngle(0);
 }
 
 void DigitalServo::attach() {
     // Allow allocation of all timers
-Serial.println(configData.angleOffset);
+Serial.println(configData.pin);
 //Serial.println(configData.maxPWM);
 //Serial.print( " " + configData.maxPWM);
     // Attach the servo to the specified pin with the min and max pulse widths
@@ -37,13 +37,15 @@ void DigitalServo::writeMicroseconds(int value) {
   
     // Ensure the value is within the pulse width range
        // std::cout << "pwm " << value << std::endl;
+       //Serial.println(value);
+       Serial.println(configData.pin);
     value = constrain(value, configData.minPWM, configData.maxPWM);
     _servo.writeMicroseconds(value+configData.pwmOffset);
 }
 
 int DigitalServo::GetAngle() {
-    Serial.print("Angle at servo : ");// + _servo.read());
-Serial.println(_angle);
+   // Serial.print("Angle at servo : ");// + _servo.read());
+//Serial.println(_angle);
     // return  _servo.read();
     return _angle;
 }
@@ -51,8 +53,8 @@ Serial.println(_angle);
 void DigitalServo::SetAngle(int angle) {
 
     //std::cout << "angle " << angle << std::endl;
-      Serial.print("Set ");// + angle);//
-      Serial.println(angle);
+      //Serial.print("Set ");// + angle);//
+     // Serial.println(angle);
     _angle = angle;
  
     angle += configData.angleOffset;
@@ -74,7 +76,7 @@ void DigitalServo::SetAngle(int angle) {
   
 writeMicroseconds(pwmValue);
 
- Serial.println("servo set done");
+
 
 }
 
