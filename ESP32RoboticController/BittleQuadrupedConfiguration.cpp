@@ -8,6 +8,7 @@ BittleQuadrupedConfiguration::BittleQuadrupedConfiguration() {
 }
 
 std::vector<QuadrupedLimbData> BittleQuadrupedConfiguration::GetLimbData() {
+    Serial.println("Build Bittle Data");
     // FL Limb Servo Configurations
     DigitalServoConfiguration flBaseConfig; // Populate with appropriate values for FL Base
     DigitalServoConfiguration flHipConfig = {33, -45, 0, 500, 2500, 134, -134, false};

@@ -37,6 +37,8 @@ struct QuadrupedData {
 Gyro gyro;
 NetworkHandler networkHandler(8081,  10000);
 
+
+
 //unsigned long syncTimestamp = 0; // The Unix timestamp received from the PC
   // Default constructor
     // In your RoboticController.cpp
@@ -46,41 +48,35 @@ RoboticController::RoboticController() : activated(false), connectedToClient(fal
 // Constructor
 RoboticController::RoboticController(QuadrupedConfiguration config) : activated(true) , connectedToClient(false) 
 {
+Serial.println("Begin Robotic Controller Construction");
+   for (auto& limb : config.GetLimbData()) {
+    _limbs.push_back(ConstructRoboticLimb(limb));
+  }
 
+Serial.println("Limbs Constructed");
 
-//    for (auto& limb : config.GetLimbData()) {
-  
-//   //  limb.Initialize();
-
-//     _limbs.push_back(ConstructRoboticLimb(limb));
-//   }
-
-
-return;
-
-    std::cout << "Robotic controller activated!" << std::endl;
     ESP32PWM::allocateTimer(0);
     ESP32PWM::allocateTimer(1);
     ESP32PWM::allocateTimer(2);
     ESP32PWM::allocateTimer(3);  
- // _limbs = limbs;
+
+//     networkHandler.subscribeToEvents(this);
+//   networkHandler.SetRoboticController(this);
+//    networkHandler.initialize();
+Serial.print("Initialize Limbs : ");
+Serial.println(_limbs.size());
+   for (auto& limb : _limbs) {
+  
+    limb.Initialize();
+  }
+return;
+
 
  Serial.println("set start angles");
 
 int baseAngle = 0;
 int hipAngle = 0;
 int kneeAngle = 0;
-
-//     networkHandler.subscribeToEvents(this);
-//   networkHandler.SetRoboticController(this);
-//    networkHandler.initialize();
-Serial.print("limbs");
-Serial.println(_limbs.size());
-   for (auto& limb : _limbs) {
-  
-    limb.Initialize();
-  }
-
 for (auto& limb : _limbs) {
   
     limb.SetLimbServos(baseAngle,hipAngle,kneeAngle);

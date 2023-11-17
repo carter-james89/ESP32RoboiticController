@@ -37,7 +37,7 @@ void setup() {
   //     //  delay(5000);
   //    limbs.push_back(config.ConstructBackLeftLimb());
 
-  delay(1000);
+  delay(5000);
 
    _roboticController = RoboticController(config); 
 
@@ -47,7 +47,7 @@ void setup() {
 void loop() {
    delay(100);
 
-// return;
+ return;
 _roboticController.RunControllerLoop();
    // delay(100);
 
