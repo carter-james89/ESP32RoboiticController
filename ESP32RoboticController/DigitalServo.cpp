@@ -1,26 +1,40 @@
 #include "DigitalServo.h"
 
-DigitalServo::DigitalServo():_angle(0){}
+DigitalServo::DigitalServo():_angle(0), _initialized(false) {}
 
-DigitalServo::DigitalServo(DigitalServoConfiguration buildData)
-    : configData(buildData), _angle(0) {
+DigitalServo::DigitalServo(String servoNam, DigitalServoConfiguration buildData)
+    : servoName(servoNam), configData(buildData), _angle(0), _initialized(false) {
 
 
 //servoPin(pin), _angleOffset(angleOffset), _pwmOffset(pwmOffset),_minPulseWidth(minPWM), _maxPulseWidth(maxPWM), _minAngleLimit(minAngleLimit), _maxAngleLimit(maxAngleLimit), _flip(flip),_angle(0)
 
 //Serial.println("servo");
-   attach();
+ 
   //  writeMicroseconds(homePWM); // Set servo to home position on startup
   //SetAngle(0);
 }
 
+void DigitalServo::Initialize(){
+    if(_initialized){
+        Serial.print("This servo has already been initialized");
+        Serial.println(servoName);
+        return;
+    }
+     Serial.print("Initialize Servo at pin : ");
+      Serial.println(servoName);
+     Serial1.print(configData.pin);
+    _initialized = true;
+  attach();
+}
+
 void DigitalServo::attach() {
     // Allow allocation of all timers
-Serial.println(configData.pin);
+
 //Serial.println(configData.maxPWM);
 //Serial.print( " " + configData.maxPWM);
     // Attach the servo to the specified pin with the min and max pulse widths
    _servo.setPeriodHertz(50); // Standard 50hz servo
+   delay(1000);
    _servo.attach(configData.pin, configData.minPWM, configData.maxPWM);
 }
 
@@ -38,9 +52,10 @@ void DigitalServo::writeMicroseconds(int value) {
     // Ensure the value is within the pulse width range
        // std::cout << "pwm " << value << std::endl;
        //Serial.println(value);
-       Serial.println(configData.pin);
+     
     value = constrain(value, configData.minPWM, configData.maxPWM);
-    _servo.writeMicroseconds(value+configData.pwmOffset);
+   Serial.println(_initialized);
+    _servo.writeMicroseconds(value);//+configData.pwmOffset);
 }
 
 int DigitalServo::GetAngle() {

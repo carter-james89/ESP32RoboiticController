@@ -22,6 +22,8 @@ RoboticLimb() ;
     void deactivate();
     bool isActivated() const;
 
+    void Initialize();
+
     void CalculateIK();
      void CalculateIK(double xPos,double yPos);
      void SetLimbServos(int baseAngle, int hipAngle, int kneeAngle);
@@ -34,6 +36,7 @@ private:
 float RadToDegree(float rad);
     bool activated;
     String _name;
+    bool _initialized;
     //  LimbSegment _baseSegment; 
     //  LimbSegment _hipSegment; 
     //  LimbSegment _kneeSegment; 

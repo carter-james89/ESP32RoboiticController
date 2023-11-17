@@ -5,7 +5,7 @@
 #include <cmath>
 #include <memory>
 
-RoboticLimb::RoboticLimb() : activated(true) {}
+RoboticLimb::RoboticLimb() : activated(true),_initialized(false) {}
 // Constructor
 
 
@@ -13,11 +13,26 @@ RoboticLimb::RoboticLimb() : activated(true) {}
 RoboticLimb::~RoboticLimb() {
 }
 
-RoboticLimb::RoboticLimb(String name, std::vector<LimbSegment> limbSegments): _name(name) {
+RoboticLimb::RoboticLimb(String name, std::vector<LimbSegment> limbSegments): _name(name),_initialized(false) {
     this->limbSegments = limbSegments;
-    Serial.print("make ");
+   // Serial.print("make ");
     _name = name;
-    Serial.println(_name);
+  //  Serial.println(_name);
+}
+
+void RoboticLimb::Initialize(){
+    if(_initialized){
+          Serial.print("This Limb has already been initialized : ");
+Serial.println(_name);
+        return;
+    }
+     Serial.print("Initialize : ");
+Serial.println(_name);
+
+    _initialized = true;
+for (auto& segment : limbSegments) {
+segment.Initialize();
+}
 }
 
 

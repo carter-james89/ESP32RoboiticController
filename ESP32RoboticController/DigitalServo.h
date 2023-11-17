@@ -20,8 +20,8 @@ public:
 
 
           DigitalServo();
-
-    DigitalServo(DigitalServoConfiguration buildData);
+void Initialize();
+    DigitalServo(String servoName, DigitalServoConfiguration buildData);
     void writeMicroseconds(int value);
     void SetAngle(int position);
     void Update();
@@ -30,11 +30,12 @@ public:
 private:
 DigitalServoConfiguration configData;
 int _angle;
+bool _initialized;
     Servo _servo;
        int _minPWM;
     void attach();
     void detach();
-
+String servoName;
     int Map(int x, int in_min, int in_max, int out_min, int out_max) ;
 };
 

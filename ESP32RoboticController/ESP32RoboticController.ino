@@ -27,19 +27,19 @@ void setup() {
  
 
   BittleQuadrupedConfiguration config; 
-      delay(1000);
-  std::vector<RoboticLimb> limbs;
-  limbs.push_back(config.ConstructFrontLeftLimb());
-      delay(1000);
-  limbs.push_back(config.ConstructFrontRightLimb());
-       delay(1000);
-   limbs.push_back(config.ConstructBackRightLimb());
-        delay(1000);
-     limbs.push_back(config.ConstructBackLeftLimb());
+    //  delay(5000);
+  // std::vector<RoboticLimb> limbs;
+  // limbs.push_back(config.ConstructFrontLeftLimb());
+  //    // delay(5000);
+  // limbs.push_back(config.ConstructFrontRightLimb());
+  //    //  delay(5000);
+  //  limbs.push_back(config.ConstructBackRightLimb());
+  //     //  delay(5000);
+  //    limbs.push_back(config.ConstructBackLeftLimb());
 
   delay(1000);
 
-  _roboticController = RoboticController(limbs); 
+   _roboticController = RoboticController(config); 
 
 
 

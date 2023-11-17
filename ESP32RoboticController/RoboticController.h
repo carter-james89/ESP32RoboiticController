@@ -13,7 +13,7 @@ public:
   // Default constructor
    RoboticController();
     // Constructor
-    RoboticController(std::vector<RoboticLimb> limbs);
+    RoboticController(QuadrupedConfiguration config);
 
     // Destructor
     ~RoboticController();
@@ -24,7 +24,7 @@ public:
     void deactivate();
     bool isActivated() const;
   //void OnMessageReceived(int messageType, const std::vector<unsigned char>& message);
-    void SetLimbs(QuadrupedLimbData* limbData);
+ 
       // Correctly overriding the OnMessageReceived method from INetworkHandlerEventListener
     void OnMessageReceived(int messageType, const std::vector<unsigned char>& message) override;
     void OnConnectionTimeout() override ;
@@ -44,6 +44,7 @@ private:
     void calculateHeight();
      void EstablishConnection();
  void SerializeInt(byte* message, int value, int& offset, int messageSize);
+ RoboticLimb ConstructRoboticLimb(QuadrupedLimbData limbData);
  
 };
 

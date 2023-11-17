@@ -1,9 +1,11 @@
 #ifndef QUADRUPEDCONFIGURATION_H
 #define QUADRUPEDCONFIGURATION_H
 
-#include "RoboticLimb.h"
+
 #include <memory>
-#include "DigitalServo.h"
+#include "QuadrupedLimbData.h"
+
+#include <vector>
 
 class QuadrupedConfiguration {
 public:
@@ -11,19 +13,12 @@ public:
     QuadrupedConfiguration();
 
     // Destructor
-    virtual ~QuadrupedConfiguration();
+   virtual ~QuadrupedConfiguration();
 
-//     struct LimbConfig {     
-// DigitalServo::DigitalServoConfiguration baseConfig;
-// DigitalServo::DigitalServoConfiguration hipConfig;
-// DigitalServo::DigitalServoConfiguration kneeConfig;
-// };
 
-    // Pure virtual functions
-    virtual RoboticLimb ConstructFrontLeftLimb()=0;
-    virtual RoboticLimb ConstructFrontRightLimb()=0;
-   virtual RoboticLimb ConstructBackRightLimb()=0;
-   virtual RoboticLimb ConstructBackLeftLimb()=0;
+   virtual std::vector<QuadrupedLimbData> GetLimbData();
+
+    //std::vector<QuadrupedLimbData> LimbData;
 };
  
 #endif // QUADRUPEDCONFIGURATION_H

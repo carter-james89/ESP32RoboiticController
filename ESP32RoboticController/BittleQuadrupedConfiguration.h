@@ -12,13 +12,13 @@ class BittleQuadrupedConfiguration : public QuadrupedConfiguration {
 public:
     BittleQuadrupedConfiguration();
 
-      RoboticLimb ConstructFrontLeftLimb() override;
-    RoboticLimb ConstructFrontRightLimb() override;
-   RoboticLimb ConstructBackRightLimb() override;
-    RoboticLimb ConstructBackLeftLimb() override;
+  //     RoboticLimb ConstructFrontLeftLimb() override;
+  //   RoboticLimb ConstructFrontRightLimb() override;
+  //  RoboticLimb ConstructBackRightLimb() override;
+      std::vector<QuadrupedLimbData> GetLimbData() override;
 
     private:
-    RoboticLimb ConstructRoboticLimb( String name, DigitalServoConfiguration hipServo, DigitalServoConfiguration kneeServo);
+   // RoboticLimb ConstructRoboticLimb( String name, DigitalServoConfiguration hipServo, DigitalServoConfiguration kneeServo);
 };
 
 #endif // BITTLEQUADRUPEDCONFIGURATION_H

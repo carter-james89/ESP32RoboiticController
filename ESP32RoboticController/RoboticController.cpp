@@ -34,33 +34,52 @@ struct QuadrupedData {
     int BLKneeAngle;
 };
 
-
 Gyro gyro;
 NetworkHandler networkHandler(8081,  10000);
 
 //unsigned long syncTimestamp = 0; // The Unix timestamp received from the PC
-
-
   // Default constructor
     // In your RoboticController.cpp
 RoboticController::RoboticController() : activated(false), connectedToClient(false) {
     // Initialize your controller without a configuration
 }
 // Constructor
-RoboticController::RoboticController(std::vector<RoboticLimb> limbs) : activated(true) , connectedToClient(false) 
+RoboticController::RoboticController(QuadrupedConfiguration config) : activated(true) , connectedToClient(false) 
 {
+
+
+//    for (auto& limb : config.GetLimbData()) {
+  
+//   //  limb.Initialize();
+
+//     _limbs.push_back(ConstructRoboticLimb(limb));
+//   }
+
+
+return;
+
     std::cout << "Robotic controller activated!" << std::endl;
     ESP32PWM::allocateTimer(0);
     ESP32PWM::allocateTimer(1);
     ESP32PWM::allocateTimer(2);
     ESP32PWM::allocateTimer(3);  
-  _limbs = limbs;
+ // _limbs = limbs;
 
  Serial.println("set start angles");
 
 int baseAngle = 0;
 int hipAngle = 0;
 int kneeAngle = 0;
+
+//     networkHandler.subscribeToEvents(this);
+//   networkHandler.SetRoboticController(this);
+//    networkHandler.initialize();
+Serial.print("limbs");
+Serial.println(_limbs.size());
+   for (auto& limb : _limbs) {
+  
+    limb.Initialize();
+  }
 
 for (auto& limb : _limbs) {
   
@@ -81,9 +100,21 @@ for (auto& limb : _limbs) {
 
       gyro.begin();
    Serial.println("Robot Configured");
-    networkHandler.subscribeToEvents(this);
-  networkHandler.SetRoboticController(this);
-   networkHandler.initialize();
+
+}
+
+RoboticLimb RoboticController::ConstructRoboticLimb(QuadrupedLimbData limbData)
+{
+   // Serial.println("build limb " + name );
+ LimbSegment baseSegment(" Base Segment");
+
+    std::vector<LimbSegment> _limbSegments;
+    _limbSegments.push_back(baseSegment);
+    _limbSegments.push_back(LimbSegment("Hip Segment",limbData.Segments[1]));//  DigitalServo(name + " Hip Servo",hipConfig)));
+  _limbSegments.push_back(LimbSegment( " Knee Segment",limbData.Segments[2]));//DigitalServo(name + " Knee Servo",kneeConfig)));
+
+    return RoboticLimb("1",_limbSegments);
+
 }
 
 void RoboticController::OnMessageReceived1(int messageType, const std::vector<unsigned char>& message) 
@@ -108,9 +139,7 @@ void RoboticController::OnMessageReceived(int messageType, const std::vector<uns
     Serial.println("Message received in RoboticController.");
 }
 
-void RoboticController::SetLimbs(QuadrupedLimbData* limbData)
-{
-}
+
 
 // Destructor
 RoboticController::~RoboticController() {}
@@ -178,7 +207,13 @@ void RoboticController::RunControllerLoop(){
 if(!networkHandler.broadcasting){
  SendRobotInfo();
 }
-   
+int baseAngle = 0;
+int hipAngle = 0;
+int kneeAngle = 0;
+   for (auto& limb : _limbs) {
+  
+  //  limb.SetLimbServos(baseAngle,hipAngle,kneeAngle);
+  }
      networkHandler.loop();
 }
 
