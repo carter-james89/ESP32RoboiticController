@@ -41,7 +41,8 @@ void setup() {
 
    _roboticController = RoboticController(config); 
 
-
+ delay(5000);
+ config.OnConstructionComplete();
 
 }
 void loop() {

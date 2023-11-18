@@ -11,7 +11,7 @@ public:
     LimbSegment(String name);
 
         // Constructor
-    LimbSegment(String name, LimbSegmentData configData);
+    LimbSegment(String name, LimbSegmentData& configData);
 
     // Destructor
     ~LimbSegment();

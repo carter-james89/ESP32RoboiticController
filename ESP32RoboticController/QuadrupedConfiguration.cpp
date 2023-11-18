@@ -12,8 +12,8 @@ QuadrupedConfiguration::~QuadrupedConfiguration() {
     // Destructor body (if needed)
 }
 
-std::vector<QuadrupedLimbData> QuadrupedConfiguration::GetLimbData() {
-    std::vector<QuadrupedLimbData> data;
+std::vector<QuadrupedLimbData*>  QuadrupedConfiguration::GetLimbData() {
+    std::vector<QuadrupedLimbData*> data;
     // Fill 'data' with the appropriate limb data
     return data;
 }

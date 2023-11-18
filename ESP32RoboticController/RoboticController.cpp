@@ -37,23 +37,45 @@ struct QuadrupedData {
 Gyro gyro;
 NetworkHandler networkHandler(8081,  10000);
 
-
-
 //unsigned long syncTimestamp = 0; // The Unix timestamp received from the PC
   // Default constructor
     // In your RoboticController.cpp
 RoboticController::RoboticController() : activated(false), connectedToClient(false) {
-    // Initialize your controller without a configuration
+   // Initialize your controller without a configuration
 }
+void printServoConfig(const DigitalServoConfiguration config) {
+    Serial.print("Pin: "); Serial.println(config.pin);
+    // Serial.print("Min Angle: "); Serial.println(config.minAngle);
+    // Serial.print("Max Angle: "); Serial.println(config.maxAngle);
+    // Serial.print("Min Pulse: "); Serial.println(config.minPulseWidth);
+    // Serial.print("Max Pulse: "); Serial.println(config.maxPulseWidth);
+    // Serial.print("Default Angle: "); Serial.println(config.defaultAngle);
+    // Serial.print("Angle Range: "); Serial.println(config.angleRange);
+    // Serial.print("Inverted: "); Serial.println(config.inverted ? "Yes" : "No");
+}
+
 // Constructor
-RoboticController::RoboticController(QuadrupedConfiguration config) : activated(true) , connectedToClient(false) 
+RoboticController::RoboticController(QuadrupedConfiguration& config) : activated(true) , connectedToClient(false) 
 {
 Serial.println("Begin Robotic Controller Construction");
-   for (auto& limb : config.GetLimbData()) {
-    _limbs.push_back(ConstructRoboticLimb(limb));
-  }
+
+//std::vector<QuadrupedLimbData*> limbData = config.GetLimbData();
+    for (const auto& limb : config.GetLimbData()) {
+        for (const auto& segment : limb->Segments) {
+           // printServoConfig(segment->ServoConfig);
+             Serial.print("Pin: "); Serial.println(segment->ServoConfig.pin);
+        }
+    }
+
+
+
+return;
+//    for (auto& limb : limbData) {
+//     _limbs.push_back(RoboticLimb("Limb",limb.Segments));
+//   }
 
 Serial.println("Limbs Constructed");
+return;
 
     ESP32PWM::allocateTimer(0);
     ESP32PWM::allocateTimer(1);
@@ -99,19 +121,19 @@ for (auto& limb : _limbs) {
 
 }
 
-RoboticLimb RoboticController::ConstructRoboticLimb(QuadrupedLimbData limbData)
-{
-   // Serial.println("build limb " + name );
- LimbSegment baseSegment(" Base Segment");
+// RoboticLimb RoboticController::ConstructRoboticLimb(QuadrupedLimbData limbData)
+// {
+//    // Serial.println("build limb " + name );
+// ;
 
-    std::vector<LimbSegment> _limbSegments;
-    _limbSegments.push_back(baseSegment);
-    _limbSegments.push_back(LimbSegment("Hip Segment",limbData.Segments[1]));//  DigitalServo(name + " Hip Servo",hipConfig)));
-  _limbSegments.push_back(LimbSegment( " Knee Segment",limbData.Segments[2]));//DigitalServo(name + " Knee Servo",kneeConfig)));
+//     std::vector<LimbSegment> _limbSegments;
+//     _limbSegments.push_back(LimbSegment (" Base Segment"));
+//     _limbSegments.push_back(LimbSegment("Hip Segment",limbData.Segments[1]));//  DigitalServo(name + " Hip Servo",hipConfig)));
+//   _limbSegments.push_back(LimbSegment( " Knee Segment",limbData.Segments[2]));//DigitalServo(name + " Knee Servo",kneeConfig)));
 
-    return RoboticLimb("1",_limbSegments);
+//     return RoboticLimb("1",_limbSegments);
 
-}
+// }
 
 void RoboticController::OnMessageReceived1(int messageType, const std::vector<unsigned char>& message) 
 { 

@@ -2,6 +2,7 @@
 #define LimbSegmentData_H
 
 #include "DigitalServo.h" // Include the header for DigitalServoConfiguration
+#include "DigitalServoConfiguration.h"
 
 
 class LimbSegmentData {

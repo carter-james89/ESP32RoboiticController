@@ -16,7 +16,7 @@ public:
    virtual ~QuadrupedConfiguration();
 
 
-   virtual std::vector<QuadrupedLimbData> GetLimbData();
+   virtual std::vector<QuadrupedLimbData*>  GetLimbData();
 
     //std::vector<QuadrupedLimbData> LimbData;
 };

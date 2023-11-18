@@ -7,10 +7,10 @@
 
 class QuadrupedLimbData {
 public:
-   std::vector<LimbSegmentData> Segments;
+   std::vector<LimbSegmentData*> Segments;
 
     // Constructor
-    QuadrupedLimbData( std::vector<LimbSegmentData> segments)
+    QuadrupedLimbData( std::vector<LimbSegmentData*> segments)
         : Segments(segments) {
         // Constructor body (if needed)
     }

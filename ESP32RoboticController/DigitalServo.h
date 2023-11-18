@@ -2,18 +2,8 @@
 #define DIGITALSERVO_H
 
 #include <ESP32Servo.h>
+#include "DigitalServoConfiguration.h"
 
-  class DigitalServoConfiguration{
-    public:
-    int pin;
-     int angleOffset;
-     int pwmOffset;
-      int minPWM;
-       int maxPWM;
-        int minAngleLimit;
-        int maxAngleLimit;
-          bool flip;
-          };
 
 class DigitalServo {
 public:
@@ -21,7 +11,7 @@ public:
 
           DigitalServo();
 void Initialize();
-    DigitalServo(String servoName, DigitalServoConfiguration buildData);
+    DigitalServo(String servoName, DigitalServoConfiguration& buildData);
     void writeMicroseconds(int value);
     void SetAngle(int position);
     void Update();

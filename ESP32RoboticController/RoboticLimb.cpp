@@ -4,7 +4,7 @@
 #include "DigitalServo.h"
 #include <cmath>
 #include <memory>
-
+#include <vector>
 RoboticLimb::RoboticLimb() : activated(true),_initialized(false) {}
 // Constructor
 
@@ -13,8 +13,13 @@ RoboticLimb::RoboticLimb() : activated(true),_initialized(false) {}
 RoboticLimb::~RoboticLimb() {
 }
 
-RoboticLimb::RoboticLimb(String name, std::vector<LimbSegment> limbSegments): _name(name),_initialized(false) {
-    this->limbSegments = limbSegments;
+RoboticLimb::RoboticLimb(String name, std::vector<LimbSegmentData>& limbSegmentConfigs): _name(name),_initialized(false) {
+
+       for (auto& segmentConfig : limbSegmentConfigs) {
+
+   limbSegments.push_back(LimbSegment("Segment",segmentConfig));
+  }
+   // this->limbSegments = limbSegments;
    // Serial.print("make ");
     _name = name;
   //  Serial.println(_name);

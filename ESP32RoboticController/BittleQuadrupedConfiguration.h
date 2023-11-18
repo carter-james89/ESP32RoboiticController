@@ -15,9 +15,12 @@ public:
   //     RoboticLimb ConstructFrontLeftLimb() override;
   //   RoboticLimb ConstructFrontRightLimb() override;
   //  RoboticLimb ConstructBackRightLimb() override;
-      std::vector<QuadrupedLimbData> GetLimbData() override;
-
+     std::vector<QuadrupedLimbData*>  GetLimbData() override;
+  void OnConstructionComplete();
     private:
+     std::vector<DigitalServoConfiguration*> servoConfigs;
+    std::vector<QuadrupedLimbData*> limbData;
+    std::vector<LimbSegmentData*> segmentData;
    // RoboticLimb ConstructRoboticLimb( String name, DigitalServoConfiguration hipServo, DigitalServoConfiguration kneeServo);
 };
 

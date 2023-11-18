@@ -12,7 +12,7 @@ public:
 RoboticLimb() ;
     // Constructor
 
-    RoboticLimb(String name, std::vector<LimbSegment> limbSegments);
+    RoboticLimb(String name, std::vector<LimbSegmentData>& limbSegmentConfigs);
 
     // Destructor
     ~RoboticLimb();

@@ -1,14 +1,16 @@
 #include "DigitalServo.h"
+#include "DigitalServoConfiguration.h"
 
 DigitalServo::DigitalServo():_angle(0), _initialized(false) {}
 
-DigitalServo::DigitalServo(String servoNam, DigitalServoConfiguration buildData)
+DigitalServo::DigitalServo(String servoNam, DigitalServoConfiguration& buildData)
     : servoName(servoNam), configData(buildData), _angle(0), _initialized(false) {
 
 
 //servoPin(pin), _angleOffset(angleOffset), _pwmOffset(pwmOffset),_minPulseWidth(minPWM), _maxPulseWidth(maxPWM), _minAngleLimit(minAngleLimit), _maxAngleLimit(maxAngleLimit), _flip(flip),_angle(0)
 
-//Serial.println("servo");
+ Serial.print("servo ");
+ Serial.println(configData.minPWM);
  
   //  writeMicroseconds(homePWM); // Set servo to home position on startup
   //SetAngle(0);

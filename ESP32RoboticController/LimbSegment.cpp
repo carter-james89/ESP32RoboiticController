@@ -11,7 +11,7 @@
 //     _name = name;
  }
 
- LimbSegment::LimbSegment(String name, LimbSegmentData configData) : isActive(true) ,_initialized(false)
+ LimbSegment::LimbSegment(String name, LimbSegmentData& configData) : isActive(true) ,_initialized(false)
  {
   //_length = length;
         // Create DigitalServo objects dynamically and store their pointers
