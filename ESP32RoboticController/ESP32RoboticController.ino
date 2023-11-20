@@ -8,8 +8,8 @@
 
 #include "RoboticController.h"
 #include "QuadrupedConfiguration.h"
-#include "BittleQuadrupedConfiguration.h"
 #include "RoboticController.h"
+#include "BittleQuadrupedConstructor.h"
 
 //RoboticController _roboticController;
 unsigned long lastPrintTime = 0; // Last time the loops per second were printed
@@ -17,6 +17,7 @@ unsigned long loopCount = 0;     // Number of loops since last print
 
 //BittleQuadrupedConfiguration config; 
 RoboticController _roboticController;
+BittleQuadrupedConstructor constructor;
 
 void setup() {
   // initialize serial communication at 115200 bits per second:
@@ -26,7 +27,7 @@ void setup() {
 
  
 
-  BittleQuadrupedConfiguration config; 
+ // BittleQuadrupedConfiguration config; 
     //  delay(5000);
   // std::vector<RoboticLimb> limbs;
   // limbs.push_back(config.ConstructFrontLeftLimb());
@@ -39,17 +40,20 @@ void setup() {
 
   delay(5000);
 
-   _roboticController = RoboticController(config); 
+ //  _roboticController = RoboticController(config); 
+ _roboticController = RoboticController(constructor);
 
  delay(5000);
- config.OnConstructionComplete();
+ //config.OnConstructionComplete();
 
 }
 void loop() {
-   delay(100);
+  _roboticController.RunControllerLoop();
+   delay(100000);
+
+
 
  return;
-_roboticController.RunControllerLoop();
    // delay(100);
 
     loopCount++; // Increment the loop counter

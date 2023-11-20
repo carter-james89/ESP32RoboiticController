@@ -3,7 +3,6 @@
 
 #include "LimbSegment.h"
 #include <iostream>
-#include "QuadrupedLimbData.h"
 #include <memory>
 
 class RoboticLimb {
@@ -12,7 +11,7 @@ public:
 RoboticLimb() ;
     // Constructor
 
-    RoboticLimb(String name, std::vector<LimbSegmentData>& limbSegmentConfigs);
+    RoboticLimb(String name, std::vector<LimbSegment> limbSegments);
 
     // Destructor
     ~RoboticLimb();

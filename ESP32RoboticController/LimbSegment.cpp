@@ -1,9 +1,7 @@
-#include <iostream>
 
-#include "DigitalServo.h"
 #include <vector>  // Include the vector header
 #include "LimbSegment.h"
-#include "LimbSegmentData.h"
+#include "DigitalServo.h"
 
 // Constructor
  LimbSegment::LimbSegment(String name) : isActive(true),_initialized(false){
@@ -11,14 +9,17 @@
 //     _name = name;
  }
 
- LimbSegment::LimbSegment(String name, LimbSegmentData& configData) : isActive(true) ,_initialized(false)
- {
-  //_length = length;
-        // Create DigitalServo objects dynamically and store their pointers
-        _servo = DigitalServo(name + " Servo",configData.ServoConfig);
+ LimbSegment::LimbSegment(String name, float length, DigitalServo servo) : _servo(servo)
+ {}
+
+//  LimbSegment::LimbSegment(String name, LimbSegmentBuildData configData) : isActive(true) ,_initialized(false)
+//  {
+//   //_length = length;
+//         // Create DigitalServo objects dynamically and store their pointers
+//         _servo = DigitalServo(name + " Servo",configData.ServoData);
       
-        _name = name;
- }
+//         _name = name;
+//  }
 
  void LimbSegment::Initialize(){
     if(_initialized){
@@ -48,10 +49,10 @@ LimbSegment::~LimbSegment() {
 
 void LimbSegment::activate() {
     isActive = true;
-    std::cout << "LimbSegment activated!" << std::endl;
+   // std::cout << "LimbSegment activated!" << std::endl;
 }
 
 void LimbSegment::deactivate() {
     isActive = false;
-    std::cout << "LimbSegment deactivated!" << std::endl;
+   // std::cout << "LimbSegment deactivated!" << std::endl;
 }

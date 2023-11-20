@@ -2,23 +2,65 @@
 #define DIGITALSERVO_H
 
 #include <ESP32Servo.h>
-#include "DigitalServoConfiguration.h"
-
 
 class DigitalServo {
 public:
+struct ServoBuildData {
+  //  String Name;
+    int pin;
+    int angleOffset;
+    int pwmOffset;
+    int minPWM;
+    int maxPWM;
+    int minAngleLimit;
+    int maxAngleLimit;
+    bool flip;
+
+       // Default constructor
+    ServoBuildData() : pin(0), angleOffset(0), pwmOffset(0), minPWM(0), maxPWM(0), minAngleLimit(0), maxAngleLimit(0), flip(false) {}
+
+
+        // Custom copy constructor
+    ServoBuildData(const ServoBuildData& other)
+        : pin(other.pin),
+          angleOffset(other.angleOffset),
+          pwmOffset(other.pwmOffset),
+          minPWM(other.minPWM),
+          maxPWM(other.maxPWM),
+          minAngleLimit(other.minAngleLimit),
+          maxAngleLimit(other.maxAngleLimit),
+          flip(other.flip) {}
+
+    // Assignment operator
+    ServoBuildData& operator=(const ServoBuildData& other) {
+        if (this != &other) {
+            pin = other.pin;
+            angleOffset = other.angleOffset;
+            pwmOffset = other.pwmOffset;
+            minPWM = other.minPWM;
+            maxPWM = other.maxPWM;
+            minAngleLimit = other.minAngleLimit;
+            maxAngleLimit = other.maxAngleLimit;
+            flip = other.flip;
+        }
+        return *this;
+    }
+};
+
 
 
           DigitalServo();
 void Initialize();
-    DigitalServo(String servoName, DigitalServoConfiguration& buildData);
+    DigitalServo(String servoName, ServoBuildData buildData);
     void writeMicroseconds(int value);
     void SetAngle(int position);
     void Update();
     int GetAngle();
 
+     DigitalServo(const DigitalServo& other);
+
 private:
-DigitalServoConfiguration configData;
+ServoBuildData configData;
 int _angle;
 bool _initialized;
     Servo _servo;
@@ -26,6 +68,7 @@ bool _initialized;
     void attach();
     void detach();
 String servoName;
+int Pin;
     int Map(int x, int in_min, int in_max, int out_min, int out_max) ;
 };
 

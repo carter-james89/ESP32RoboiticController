@@ -3,7 +3,8 @@
 
 #include "DigitalServo.h"
 #include <vector>  // Include the vector header
-#include "LimbSegmentData.h"
+
+
 
 class LimbSegment {
 public:
@@ -11,8 +12,8 @@ public:
     LimbSegment(String name);
 
         // Constructor
-    LimbSegment(String name, LimbSegmentData& configData);
-
+   // LimbSegment(String name, LimbSegmentBuildData configData);
+LimbSegment(String name, float length, DigitalServo servo);
     // Destructor
     ~LimbSegment();
 void Initialize();

@@ -5,16 +5,15 @@
 #include <iostream>
 #include <vector>
 #include "RoboticLimb.h"
-#include "QuadrupedConfiguration.h"
-#include "QuadrupedLimbData.h"
+#include "BittleQuadrupedConstructor.h"
 
 class RoboticController : public INetworkHandlerEventListener {
 public:
-  // Default constructor
+  // Default constructor 
    RoboticController();
     // Constructor
-    RoboticController(QuadrupedConfiguration& config);
-
+  //  RoboticController(BittleQuadrupedConfiguration& config);
+RoboticController(BittleQuadrupedConstructor constructor);
     // Destructor
     ~RoboticController();
 
@@ -44,7 +43,7 @@ private:
     void calculateHeight();
      void EstablishConnection();
  void SerializeInt(byte* message, int value, int& offset, int messageSize);
- RoboticLimb ConstructRoboticLimb(QuadrupedLimbData limbData);
+ //RoboticLimb ConstructRoboticLimb(QuadrupedLimbData limbData);
  
 };
 

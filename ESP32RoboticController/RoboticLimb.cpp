@@ -5,6 +5,9 @@
 #include <cmath>
 #include <memory>
 #include <vector>
+
+
+
 RoboticLimb::RoboticLimb() : activated(true),_initialized(false) {}
 // Constructor
 
@@ -13,17 +16,22 @@ RoboticLimb::RoboticLimb() : activated(true),_initialized(false) {}
 RoboticLimb::~RoboticLimb() {
 }
 
-RoboticLimb::RoboticLimb(String name, std::vector<LimbSegmentData>& limbSegmentConfigs): _name(name),_initialized(false) {
+RoboticLimb::RoboticLimb(String name, std::vector<LimbSegment> limbs) :limbSegments(limbs)
+{
 
-       for (auto& segmentConfig : limbSegmentConfigs) {
-
-   limbSegments.push_back(LimbSegment("Segment",segmentConfig));
-  }
-   // this->limbSegments = limbSegments;
-   // Serial.print("make ");
-    _name = name;
-  //  Serial.println(_name);
 }
+
+// RoboticLimb::RoboticLimb(String name, LimbBuildData limbData): _name(name),_initialized(false) {
+
+//       for (auto& segmentConfig : limbData.LimbSegmentsBuildData) {
+//   limbSegments.push_back(LimbSegment("Segment",segmentConfig));
+//  }
+// //LimbSegment("",limbSegmentConfigs);
+//    // this->limbSegments = limbSegments;
+//    // Serial.print("make ");
+//     _name = name;
+//   //  Serial.println(_name);
+// }
 
 void RoboticLimb::Initialize(){
     if(_initialized){
@@ -42,11 +50,11 @@ segment.Initialize();
 
 
 void RoboticLimb::SetLimbServos(int base, int hip, int knee){
-    Serial.print("set servos at ");
-Serial.println(_name);
+ //   Serial.print("set servos at ");
+//Serial.println(_name);
     //return;
   limbSegments[1].SetServoAngle(hip);
-     limbSegments[2].SetServoAngle(knee);
+  limbSegments[2].SetServoAngle(knee);
 }
  void RoboticLimb::SerializeLimbData(std::vector<std::uint8_t>& message) {
        // for (const auto& segment : _limbSegments) {

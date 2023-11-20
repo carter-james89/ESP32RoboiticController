@@ -1,19 +1,28 @@
-#include "DigitalServo.h"
-#include "DigitalServoConfiguration.h"
 
+#include "BittleQuadrupedConstructor.h"
+#include "DigitalServo.h"
 DigitalServo::DigitalServo():_angle(0), _initialized(false) {}
 
-DigitalServo::DigitalServo(String servoNam, DigitalServoConfiguration& buildData)
+DigitalServo::DigitalServo(String servoNam, ServoBuildData buildData)
     : servoName(servoNam), configData(buildData), _angle(0), _initialized(false) {
-
 
 //servoPin(pin), _angleOffset(angleOffset), _pwmOffset(pwmOffset),_minPulseWidth(minPWM), _maxPulseWidth(maxPWM), _minAngleLimit(minAngleLimit), _maxAngleLimit(maxAngleLimit), _flip(flip),_angle(0)
 
  Serial.print("servo ");
- Serial.println(configData.minPWM);
- 
+ Serial.println(buildData.pin);
+ //Pin = configData.pin;
+   // this->Pin = buildData.pin;
+ attach();
   //  writeMicroseconds(homePWM); // Set servo to home position on startup
   //SetAngle(0);
+}
+// Implementation of the copy constructor
+DigitalServo::DigitalServo(const DigitalServo& other)
+    : configData(other.configData), _angle(other._angle), _initialized(other._initialized), servoName(other.servoName) {
+    // Since Servo class might not be copyable (depends on its implementation), we reattach it
+    if (other._initialized) {
+        _servo.attach(configData.pin, configData.minPWM, configData.maxPWM);
+    }
 }
 
 void DigitalServo::Initialize(){
@@ -34,6 +43,7 @@ void DigitalServo::attach() {
 
 //Serial.println(configData.maxPWM);
 //Serial.print( " " + configData.maxPWM);
+
     // Attach the servo to the specified pin with the min and max pulse widths
    _servo.setPeriodHertz(50); // Standard 50hz servo
    delay(1000);
@@ -71,7 +81,9 @@ void DigitalServo::SetAngle(int angle) {
 
     //std::cout << "angle " << angle << std::endl;
       //Serial.print("Set ");// + angle);//
-     // Serial.println(angle);
+      Serial.print("Set angle on pin : " );
+      Serial.println(configData.pin);
+      return;
     _angle = angle;
  
     angle += configData.angleOffset;
