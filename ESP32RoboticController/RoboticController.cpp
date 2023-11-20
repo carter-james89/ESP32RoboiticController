@@ -55,7 +55,19 @@ RoboticController::RoboticController() : activated(false), connectedToClient(fal
 
 RoboticController::RoboticController(BittleQuadrupedConstructor constructor)
 {
+   Serial.println("Begin Robotic Controller Construction");
+       ESP32PWM::allocateTimer(0);
+    ESP32PWM::allocateTimer(1);
+    ESP32PWM::allocateTimer(2);
+    ESP32PWM::allocateTimer(3);  
+
+
  constructor.GetLimbs(_limbs);
+ Serial.println("Limbs Constructed");
+
+     networkHandler.subscribeToEvents(this);
+  networkHandler.SetRoboticController(this);
+   networkHandler.initialize();
 }
 
 // Constructor
@@ -243,8 +255,14 @@ limbCount++;
 
 
 void RoboticController::RunControllerLoop(){
+  int servoValues[3];
      for (auto& limb : _limbs) {
-
+limb.GetServoValues(servoValues);
+       for (size_t i = 0; i < 3; i++)
+       {
+          Serial.print("Read angle : ");
+          Serial.println(servoValues[i]);
+       }    
 limb.SetLimbServos(10,15,56);
     }
 

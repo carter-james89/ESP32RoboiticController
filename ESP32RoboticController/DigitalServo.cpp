@@ -66,7 +66,7 @@ void DigitalServo::writeMicroseconds(int value) {
        //Serial.println(value);
      
     value = constrain(value, configData.minPWM, configData.maxPWM);
-   Serial.println(_initialized);
+   //Serial.println(_initialized);
     _servo.writeMicroseconds(value);//+configData.pwmOffset);
 }
 
@@ -82,8 +82,9 @@ void DigitalServo::SetAngle(int angle) {
     //std::cout << "angle " << angle << std::endl;
       //Serial.print("Set ");// + angle);//
       Serial.print("Set angle on pin : " );
-      Serial.println(configData.pin);
-      return;
+      Serial.print(configData.pin);
+    Serial.print(" : ");
+    Serial.println(angle);
     _angle = angle;
  
     angle += configData.angleOffset;
