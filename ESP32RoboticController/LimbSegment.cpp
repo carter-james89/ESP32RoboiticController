@@ -4,13 +4,21 @@
 #include "DigitalServo.h"
 
 // Constructor
- LimbSegment::LimbSegment(String name) : isActive(true),_initialized(false){
+ LimbSegment::LimbSegment(String name) : isActive(true),_initialized(false), _name(name){
 //     // Initialization can be added here
 //     _name = name;
  }
 
- LimbSegment::LimbSegment(String name, float length, DigitalServo servo) : _servo(servo)
+ LimbSegment::LimbSegment(String name, float length, DigitalServo servo) : _servo(servo),_name(name),_initialized(false)
  {}
+
+     LimbSegment::LimbSegment(const LimbSegment& other)
+        : _name(other._name),
+          _servo(other._servo),
+          _initialized(other._initialized),
+          isActive(other.isActive) {
+        // Copy other member variables if necessary
+    }
 
 //  LimbSegment::LimbSegment(String name, LimbSegmentBuildData configData) : isActive(true) ,_initialized(false)
 //  {

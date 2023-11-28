@@ -32,28 +32,36 @@ struct QuadrupedData {
     int BLHipAngle;
     int BLKneeAngle;
 };
+   class QuadrupedLimbData
+    {
+      public:
+         float FLBaseAngle;
+         float FLHipAngle;
+         float FLKneeAngle;
+
+         float FRBaseAngle;
+         float FRHipAngle;
+         float FRKneeAngle;
+
+         float BRBaseAngle;
+         float BRHipAngle;
+         float BRKneeAngle;
+
+         float BLBaseAngle;
+         float BLHipAngle;
+         float BLKneeAngle;
+    };
 
 Gyro gyro;
 NetworkHandler networkHandler(8081,  10000);
 
-//unsigned long syncTimestamp = 0; // The Unix timestamp received from the PC
-  // Default constructor
-    // In your RoboticController.cpp
-RoboticController::RoboticController() : activated(false), connectedToClient(false) {
+
+
+RoboticController::RoboticController() : activated(false), connectedToClient(false),connectedBaseAngle(0),connectedHipAngle(80),connectedKneeAngle(-130) {
    // Initialize your controller without a configuration
 }
-// void printServoConfig(const DigitalServoConfiguration config) {
-//     Serial.print("Pin: "); Serial.println(config.pin);
-//     // Serial.print("Min Angle: "); Serial.println(config.minAngle);
-//     // Serial.print("Max Angle: "); Serial.println(config.maxAngle);
-//     // Serial.print("Min Pulse: "); Serial.println(config.minPulseWidth);
-//     // Serial.print("Max Pulse: "); Serial.println(config.maxPulseWidth);
-//     // Serial.print("Default Angle: "); Serial.println(config.defaultAngle);
-//     // Serial.print("Angle Range: "); Serial.println(config.angleRange);
-//     // Serial.print("Inverted: "); Serial.println(config.inverted ? "Yes" : "No");
-// }
 
-RoboticController::RoboticController(BittleQuadrupedConstructor constructor)
+RoboticController::RoboticController(BittleQuadrupedConstructor constructor):connectedBaseAngle(0),connectedHipAngle(60),connectedKneeAngle(-130)
 {
    Serial.println("Begin Robotic Controller Construction");
        ESP32PWM::allocateTimer(0);
@@ -61,117 +69,29 @@ RoboticController::RoboticController(BittleQuadrupedConstructor constructor)
     ESP32PWM::allocateTimer(2);
     ESP32PWM::allocateTimer(3);  
 
-
  constructor.GetLimbs(_limbs);
  Serial.println("Limbs Constructed");
 
-     networkHandler.subscribeToEvents(this);
+for (auto& limbData : _limbs) {
+  limbData.Initialize();
+}
+  preConnectionBaseAngle = 0;
+  preConnectionHipAngle = 80;
+  preConnectionKneeAngle = -140;
+
+   for (auto& limb : _limbs) {
+  
+   limb.SetLimbServos(preConnectionBaseAngle,preConnectionHipAngle,preConnectionKneeAngle);
+  }
+       networkHandler.subscribeToEvents(this);
   networkHandler.SetRoboticController(this);
    networkHandler.initialize();
+
 }
-
-// Constructor
-// RoboticController::RoboticController(BittleQuadrupedConfiguration& config) : activated(true) , connectedToClient(false) 
-// {
-// Serial.println("Begin Robotic Controller Construction");
-
-// //config.GetLimbs(_limbs);
-
-//    for (auto& limbData : _limbs) {
-//     Serial.println("config info ");
-//     //Serial.println(limb.pin);
-//   //  _limbs.push_back(RoboticLimb("Limb",limb.pin));
-//   //_limbs.push_back(RoboticLimb("Limb",limbData));
-//   }
-
-
-
-//     for (auto& limb : _limbs) {
-
-// //limb.Initialize();
-//     }
-
-// //Serial.println(config1.pin);
-
-// //std::vector<QuadrupedLimbData*> limbData = config.GetLimbData();
-//     // for (const auto& limb : config.GetLimbData()) {
-//     //     for (const auto& segment : limb->Segments) {
-//     //        // printServoConfig(segment->ServoConfig);
-//     //          Serial.print("Pin: "); Serial.println(segment->ServoConfig.pin);
-//     //     }
-//     // }
-
-
-
-// return;
-// //    for (auto& limb : limbData) {
-// //     _limbs.push_back(RoboticLimb("Limb",limb.Segments));
-// //   }
-
-// Serial.println("Limbs Constructed");
-// return;
-
-//     ESP32PWM::allocateTimer(0);
-//     ESP32PWM::allocateTimer(1);
-//     ESP32PWM::allocateTimer(2);
-//     ESP32PWM::allocateTimer(3);  
-
-// //     networkHandler.subscribeToEvents(this);
-// //   networkHandler.SetRoboticController(this);
-// //    networkHandler.initialize();
-// Serial.print("Initialize Limbs : ");
-// Serial.println(_limbs.size());
-//    for (auto& limb : _limbs) {
-  
-//     limb.Initialize();
-//   }
-// return;
-
-
-//  Serial.println("set start angles");
-
-// int baseAngle = 0;
-// int hipAngle = 0;
-// int kneeAngle = 0;
-// for (auto& limb : _limbs) {
-  
-//     limb.SetLimbServos(baseAngle,hipAngle,kneeAngle);
-//   }
-//     int servoValues[3]{0,0,0};
-
-
-// // Serial.println("attempt to read angles");
-// // for (auto& limb : _limbs) {
-// //        limb.GetServoValues(servoValues);
-// //        for (size_t i = 0; i < 3; i++)
-// //        {
-// //           Serial.println("Read angle ");
-// //           Serial.println(servoValues[i]);
-// //        }    
-// //    }
-
-//       gyro.begin();
-//    Serial.println("Robot Configured");
-
-// }
-
-// RoboticLimb RoboticController::ConstructRoboticLimb(QuadrupedLimbData limbData)
-// {
-//    // Serial.println("build limb " + name );
-// ;
-
-//     std::vector<LimbSegment> _limbSegments;
-//     _limbSegments.push_back(LimbSegment (" Base Segment"));
-//     _limbSegments.push_back(LimbSegment("Hip Segment",limbData.Segments[1]));//  DigitalServo(name + " Hip Servo",hipConfig)));
-//   _limbSegments.push_back(LimbSegment( " Knee Segment",limbData.Segments[2]));//DigitalServo(name + " Knee Servo",kneeConfig)));
-
-//     return RoboticLimb("1",_limbSegments);
-
-// }
 
 void RoboticController::OnMessageReceived1(int messageType, const std::vector<unsigned char>& message) 
 { 
-  //  Serial.println(messageType);
+   // Serial.println(messageType);
    switch (messageType) {
         case 0:  // Connection established, sync time
             EstablishConnection();
@@ -181,17 +101,30 @@ void RoboticController::OnMessageReceived1(int messageType, const std::vector<un
       //  SendRobotInfo();
             break;
         case 2:  // Set motor values
-          //  runSensors();
+          if (message.size() >= sizeof(QuadrupedLimbData)) {
+                QuadrupedLimbData limbData;
+                memcpy(&limbData, message.data(), sizeof(QuadrupedLimbData));
+
+                // Debugging: Print raw bytes
+                // Serial.println("Raw Data:");
+                // for (size_t i = 0; i < sizeof(QuadrupedLimbData); ++i) {
+                //     Serial.print(message[i], HEX);
+                //     Serial.print(" ");
+                // }
+                // Serial.println();
+
+                // Print the angle
+                Serial.print("BLHipAngle: ");
+                Serial.println(limbData.BLHipAngle);
             break;
         // ... other cases ...
     }
-    }
+   }
+}
     
 void RoboticController::OnMessageReceived(int messageType, const std::vector<unsigned char>& message) {
     Serial.println("Message received in RoboticController.");
 }
-
-
 
 // Destructor
 RoboticController::~RoboticController() {}
@@ -253,26 +186,33 @@ limbCount++;
     }
 }
 
-
 void RoboticController::RunControllerLoop(){
   int servoValues[3];
      for (auto& limb : _limbs) {
 limb.GetServoValues(servoValues);
-       for (size_t i = 0; i < 3; i++)
-       {
-          Serial.print("Read angle : ");
-          Serial.println(servoValues[i]);
-       }    
-limb.SetLimbServos(10,15,56);
-    }
-
-    return;
+      //  for (size_t i = 0; i < 3; i++)
+      //  {
+      //     Serial.print("Read angle : ");
+      //     Serial.println(servoValues[i]);
+      //  }    
+     
+if(networkHandler.broadcasting){
+ limb.SetLimbServos(preConnectionBaseAngle,preConnectionHipAngle,preConnectionKneeAngle);
+}
+else{
+  limb.SetLimbServos(connectedBaseAngle,connectedHipAngle,connectedKneeAngle);
+}
+}
    // Serial.println(connectedToClient);
 if(!networkHandler.broadcasting){
  SendRobotInfo();
 }
+     networkHandler.loop();
+    
+    return;
+
 int baseAngle = 0;
-int hipAngle = 0;
+int hipAngle = -40;
 int kneeAngle = 0;
    for (auto& limb : _limbs) {
   
@@ -280,6 +220,7 @@ int kneeAngle = 0;
   }
      networkHandler.loop();
 }
+
 
 void RoboticController::OnConnectionTimeout(){
 connectedToClient = false;

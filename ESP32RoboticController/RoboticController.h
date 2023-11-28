@@ -44,7 +44,12 @@ private:
      void EstablishConnection();
  void SerializeInt(byte* message, int value, int& offset, int messageSize);
  //RoboticLimb ConstructRoboticLimb(QuadrupedLimbData limbData);
- 
+ int preConnectionBaseAngle;
+  int preConnectionHipAngle;
+   int preConnectionKneeAngle;
+    int connectedBaseAngle;
+  int connectedHipAngle;
+   int connectedKneeAngle;
 };
 
 #endif // ROBOTICCONTROLLER_H

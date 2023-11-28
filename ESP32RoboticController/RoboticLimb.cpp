@@ -16,22 +16,10 @@ RoboticLimb::RoboticLimb() : activated(true),_initialized(false) {}
 RoboticLimb::~RoboticLimb() {
 }
 
-RoboticLimb::RoboticLimb(String name, std::vector<LimbSegment> limbs) :limbSegments(limbs)
+RoboticLimb::RoboticLimb(String name, std::vector<LimbSegment> limbs) :_name(name),limbSegments(limbs),_initialized(false)
 {
 
 }
-
-// RoboticLimb::RoboticLimb(String name, LimbBuildData limbData): _name(name),_initialized(false) {
-
-//       for (auto& segmentConfig : limbData.LimbSegmentsBuildData) {
-//   limbSegments.push_back(LimbSegment("Segment",segmentConfig));
-//  }
-// //LimbSegment("",limbSegmentConfigs);
-//    // this->limbSegments = limbSegments;
-//    // Serial.print("make ");
-//     _name = name;
-//   //  Serial.println(_name);
-// }
 
 void RoboticLimb::Initialize(){
     if(_initialized){
@@ -43,9 +31,9 @@ Serial.println(_name);
 Serial.println(_name);
 
     _initialized = true;
-for (auto& segment : limbSegments) {
-segment.Initialize();
-}
+\
+limbSegments[1].Initialize();
+limbSegments[2].Initialize();
 }
 
 

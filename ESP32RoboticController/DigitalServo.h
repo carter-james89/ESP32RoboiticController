@@ -47,8 +47,6 @@ struct ServoBuildData {
     }
 };
 
-
-
           DigitalServo();
 void Initialize();
     DigitalServo(String servoName, ServoBuildData buildData);
@@ -67,6 +65,7 @@ bool _initialized;
        int _minPWM;
     void attach();
     void detach();
+    bool attached;
 String servoName;
 int Pin;
     int Map(int x, int in_min, int in_max, int out_min, int out_max) ;

@@ -4,10 +4,10 @@
 #include <ArduinoJson.h>
 
 const char* ssid = "because-fi";
-//const char* password = "DaveReevis";
+const char* password = "DaveReevis";
 
 //const char* ssid = "iPhone (7)";
-const char* password = "66666665";
+//const char* password = "66666665";
 
 String connectionDataJson;
 const int broadcastPort = 5501; // Local port to listen for incoming UDP packets

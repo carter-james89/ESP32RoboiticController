@@ -14,6 +14,7 @@ public:
         // Constructor
    // LimbSegment(String name, LimbSegmentBuildData configData);
 LimbSegment(String name, float length, DigitalServo servo);
+     LimbSegment(const LimbSegment& other);
     // Destructor
     ~LimbSegment();
 void Initialize();

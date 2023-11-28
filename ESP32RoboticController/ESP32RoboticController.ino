@@ -25,19 +25,6 @@ void setup() {
     delay(2000);
   Serial.println("Robot bootup");
 
- 
-
- // BittleQuadrupedConfiguration config; 
-    //  delay(5000);
-  // std::vector<RoboticLimb> limbs;
-  // limbs.push_back(config.ConstructFrontLeftLimb());
-  //    // delay(5000);
-  // limbs.push_back(config.ConstructFrontRightLimb());
-  //    //  delay(5000);
-  //  limbs.push_back(config.ConstructBackRightLimb());
-  //     //  delay(5000);
-  //    limbs.push_back(config.ConstructBackLeftLimb());
-
   delay(5000);
 
  //  _roboticController = RoboticController(config); 
@@ -49,7 +36,7 @@ void setup() {
 }
 void loop() {
   _roboticController.RunControllerLoop();
-   delay(5000);
+   delay(100);
 
 
 
