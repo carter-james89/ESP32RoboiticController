@@ -42,7 +42,8 @@
 }
 
  void LimbSegment::SetServoAngle(int newAngle){
- // Serial.println(_name);
+  Serial.print("limbsegment ");
+       Serial.println(_name);
 _servo.SetAngle(newAngle);
  }
  int LimbSegment::GetServoAngle(){

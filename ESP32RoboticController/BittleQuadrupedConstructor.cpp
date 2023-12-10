@@ -63,7 +63,7 @@ limbs.push_back(RoboticLimb("FL Limb", std::vector<LimbSegment>{
       DigitalServo::ServoBuildData brHipConfig;
         brHipConfig.pin = 15;
         brHipConfig.angleOffset = -45;
-        brHipConfig.pwmOffset = 0;
+        brHipConfig.pwmOffset = -50;
         brHipConfig.minPWM = 500;
         brHipConfig.maxPWM = 2500;
         brHipConfig.minAngleLimit = -134;

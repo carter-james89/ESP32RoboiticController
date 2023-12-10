@@ -36,7 +36,7 @@ void setup() {
 }
 void loop() {
   _roboticController.RunControllerLoop();
-   delay(100);
+   delay(500);
 
 
 

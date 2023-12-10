@@ -47,9 +47,7 @@ private:
  int preConnectionBaseAngle;
   int preConnectionHipAngle;
    int preConnectionKneeAngle;
-    int connectedBaseAngle;
-  int connectedHipAngle;
-   int connectedKneeAngle;
+
 };
 
 #endif // ROBOTICCONTROLLER_H

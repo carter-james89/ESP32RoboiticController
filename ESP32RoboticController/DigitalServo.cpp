@@ -68,10 +68,10 @@ void DigitalServo::writeMicroseconds(int value) {
      
     value = constrain(value, configData.minPWM, configData.maxPWM);
 
-        //  Serial.print("Is Attached : " );
- //Serial.println(attached);
+          Serial.print("Is Attached : " );
+ Serial.println(attached);
  //Serial.print("pwm");
- //Serial.println(value);
+ Serial.println(value);
   
     _servo.writeMicroseconds(value);//+configData.pwmOffset);
 }
