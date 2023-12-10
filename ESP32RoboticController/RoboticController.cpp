@@ -57,11 +57,11 @@ NetworkHandler networkHandler(8081,  10000);
 
 
 
-RoboticController::RoboticController() : activated(false), connectedToClient(false),connectedBaseAngle(0),connectedHipAngle(80),connectedKneeAngle(-130) {
+RoboticController::RoboticController() : activated(false), connectedToClient(false){
    // Initialize your controller without a configuration
 }
 
-RoboticController::RoboticController(BittleQuadrupedConstructor constructor):connectedBaseAngle(0),connectedHipAngle(60),connectedKneeAngle(-130)
+RoboticController::RoboticController(BittleQuadrupedConstructor constructor)
 {
    Serial.println("Begin Robotic Controller Construction");
        ESP32PWM::allocateTimer(0);
@@ -76,8 +76,8 @@ for (auto& limbData : _limbs) {
   limbData.Initialize();
 }
   preConnectionBaseAngle = 0;
-  preConnectionHipAngle = 80;
-  preConnectionKneeAngle = -140;
+  preConnectionHipAngle = 45;
+  preConnectionKneeAngle = -90;
 
    for (auto& limb : _limbs) {
   
@@ -113,9 +113,17 @@ void RoboticController::OnMessageReceived1(int messageType, const std::vector<un
                 // }
                 // Serial.println();
 
+             //  connectedBaseAngle =  0;//limbData.FLBaseAngle;
+connectedHipAngle = limbData.BLHipAngle;
+               connectedKneeAngle = limbData.BLKneeAngle;
+//               for (auto& limb : _limbs) {
+// limb.SetLimbServos(0,limbData.BLHipAngle,limbData.BLKneeAngle);
+//               }
+
                 // Print the angle
-                Serial.print("BLHipAngle: ");
+                Serial.print("BLHipAngle from network: ");
                 Serial.println(limbData.BLHipAngle);
+                 Serial.println(limbData.BLKneeAngle);
             break;
         // ... other cases ...
     }
@@ -187,38 +195,28 @@ limbCount++;
 }
 
 void RoboticController::RunControllerLoop(){
-  int servoValues[3];
+networkHandler.loop();
+  if(!networkHandler.broadcasting){
+       SendRobotInfo();
+       
+
+
+ Serial.print("angles");
+ Serial.println(connectedHipAngle);
+   Serial.println(connectedKneeAngle);
+  }
+
      for (auto& limb : _limbs) {
-limb.GetServoValues(servoValues);
-      //  for (size_t i = 0; i < 3; i++)
-      //  {
-      //     Serial.print("Read angle : ");
-      //     Serial.println(servoValues[i]);
-      //  }    
-     
-if(networkHandler.broadcasting){
+if(!connectedToClient){
  limb.SetLimbServos(preConnectionBaseAngle,preConnectionHipAngle,preConnectionKneeAngle);
 }
 else{
-  limb.SetLimbServos(connectedBaseAngle,connectedHipAngle,connectedKneeAngle);
+
+ // limb.SetLimbServos(connectedBaseAngle,connectedHipAngle,connectedKneeAngle);
 }
 }
    // Serial.println(connectedToClient);
-if(!networkHandler.broadcasting){
- SendRobotInfo();
-}
-     networkHandler.loop();
-    
-    return;
 
-int baseAngle = 0;
-int hipAngle = -40;
-int kneeAngle = 0;
-   for (auto& limb : _limbs) {
-  
-  //  limb.SetLimbServos(baseAngle,hipAngle,kneeAngle);
-  }
-     networkHandler.loop();
 }
 
 

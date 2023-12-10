@@ -94,12 +94,13 @@ if(!attached){
   //    Serial.print("Set angle on pin : " );
   //    Serial.print(configData.pin);
   //  Serial.print(" : ");
-   // Serial.println(angle);
+
     _angle = angle;
- 
+   // Serial.print("Raw angle");
+     //Serial.println(angle);
     angle += configData.angleOffset;
-
-
+   // Serial.print("Adjusted angle");
+   // Serial.println(angle);
          float desiredAngle = constrain(angle, configData.minAngleLimit,configData.maxAngleLimit);
    int pwmValue = map(angle, -135, 135, configData.minPWM, configData.maxPWM);
   

@@ -38,7 +38,7 @@ limbSegments[2].Initialize();
 
 
 void RoboticLimb::SetLimbServos(int base, int hip, int knee){
- //   Serial.print("set servos at ");
+   // Serial.print("set servos at ");
 //Serial.println(_name);
     //return;
   limbSegments[1].SetServoAngle(hip);

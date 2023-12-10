@@ -1,6 +1,9 @@
 #ifndef ROBOTICCONTROLLER_H
 #define ROBOTICCONTROLLER_H
 
+//#include <mutex>
+
+
 #include "INetworkHandlerEventListener.h"
 #include <iostream>
 #include <vector>
@@ -34,6 +37,7 @@ RoboticController(BittleQuadrupedConstructor constructor);
      
 
 private:
+ //std::mutex mtx; 
    bool activated;
     bool connectedToClient;
    std::vector<RoboticLimb> _limbs;
