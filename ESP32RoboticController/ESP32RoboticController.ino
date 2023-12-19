@@ -16,7 +16,7 @@ unsigned long lastPrintTime = 0; // Last time the loops per second were printed
 unsigned long loopCount = 0;     // Number of loops since last print
 
 //BittleQuadrupedConfiguration config; 
-RoboticController _roboticController;
+RoboticController* _roboticController;
 BittleQuadrupedConstructor constructor;
 
 void setup() {
@@ -28,15 +28,15 @@ void setup() {
   delay(5000);
 
  //  _roboticController = RoboticController(config); 
- _roboticController = RoboticController(constructor);
+ _roboticController = new RoboticController(constructor);
 
  delay(5000);
  //config.OnConstructionComplete();
 
 }
 void loop() {
-  _roboticController.RunControllerLoop();
-   delay(1000);
+  _roboticController->RunControllerLoop();
+   delay(10);
 
 
 

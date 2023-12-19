@@ -97,7 +97,7 @@ if(!attached){
 
     _angle = angle;
    // Serial.print("Raw angle");
-     //Serial.println(angle);
+   //  Serial.println(angle);
     angle += configData.angleOffset;
    // Serial.print("Adjusted angle");
    // Serial.println(angle);

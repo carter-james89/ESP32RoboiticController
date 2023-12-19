@@ -31,7 +31,7 @@ Serial.println(_name);
 Serial.println(_name);
 
     _initialized = true;
-\
+
 limbSegments[1].Initialize();
 limbSegments[2].Initialize();
 }

@@ -42,8 +42,6 @@ void NetworkHandler::SetRoboticController(RoboticController* rc){
     roboticControler = rc;
 }
 
-
-
 void NetworkHandler::connectToWifi(){
        WiFi.begin(ssid, password);
     
@@ -51,7 +49,6 @@ void NetworkHandler::connectToWifi(){
       Serial.print("Attempting to Connect to WIFI : ");
     Serial.println(ssid);
     delay(10000);
-  
   }
 
   Serial.println("Connected to WiFi");
@@ -63,14 +60,7 @@ void NetworkHandler::SendEmptyResponse(int header) {
     // Create a packet that contains only the header
     byte packet[0];
     memcpy(packet, &header, sizeof(header));
-
     sendMessage(header,packet, sizeof(packet));
-
-    // Send the packet
-    // connectionUDP.beginPacket(connectionUDP.remoteIP(), connectionPort);
-    // connectionUDP.write(packet, sizeof(packet));
-    // connectionUDP.endPacket();
-  //  Serial.println("Sent empty response with header: " + String(header));
 }
 
 void NetworkHandler::sendBroadcast() {
@@ -101,7 +91,6 @@ void NetworkHandler::sendMessage(int header, byte* message, int messageSize) {
     memcpy(packet + sizeof(header), timeByteArray, sizeof(timeSinceSync));
     memcpy(packet + sizeof(header) + sizeof(timeSinceSync), message, messageSize);
 
-//Serial.println("send packet");
     // Send the packet
     connectionUDP.beginPacket(connectionUDP.remoteIP(), connectionPort);
     connectionUDP.write(packet, totalPacketSize);
@@ -109,19 +98,9 @@ void NetworkHandler::sendMessage(int header, byte* message, int messageSize) {
 }
 
 void NetworkHandler::OnConnetionTimeout(){
-    //  if(firstTimeout){
-    //     Serial.println("tIMEOUT : Resend Message over connection");
-    //    // sendMessage(previousMessage);
-    //     firstTimeout = false;
-    //         lastResponseTime = millis();
-    //     return;
-    //  }
         Serial.println("Connection timeout");
-     firstTimeout = true;
-       
-
+     firstTimeout = true;     
         roboticControler->OnConnectionTimeout1();
-
         OnConnectionLost();
     //    for (auto& listener : eventListeners) {
     // if (listener != nullptr) {
@@ -147,7 +126,6 @@ void NetworkHandler::loop() {
 void NetworkHandler::AttemptEstablishConnection(){
       Serial.println("Attempt establish connection");
       syncMillis = millis();
- // Serial.println("Set sync time: " + syncMillis);
    SendEmptyResponse(0);
    OnConnectionEstablished();
 }
@@ -210,7 +188,6 @@ if (roboticControler != nullptr) {
     Serial.println("roboticControler is null!");
 }
 
-
 //Something is wrong with this
 // for (INetworkHandlerEventListener* listener : eventListeners) {
 //     if (listener != nullptr) {
@@ -220,12 +197,9 @@ if (roboticControler != nullptr) {
 //          listener->OnMessageReceived(header, messageVector);
 //     }
 // }
-
-
                 // Clean up the allocated message content buffer
                 delete[] messageContent;
             }
         }
     }
 }
-

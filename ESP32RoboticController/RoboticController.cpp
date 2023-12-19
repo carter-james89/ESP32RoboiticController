@@ -1,4 +1,3 @@
-
 #include <iostream>
 #include "RoboticLimb.h"
 #include "RoboticController.h"
@@ -55,15 +54,17 @@ struct QuadrupedData {
 Gyro gyro;
 NetworkHandler networkHandler(8081,  10000);
 
-
-
 RoboticController::RoboticController() : activated(false), connectedToClient(false){
    // Initialize your controller without a configuration
+    Serial.print("RoboticController instance created at: ");
+    Serial.println((uintptr_t)this, HEX);
 }
 
-RoboticController::RoboticController(BittleQuadrupedConstructor constructor)
+RoboticController::RoboticController(BittleQuadrupedConstructor constructor) : activated(false), connectedToClient(false)
 {
    Serial.println("Begin Robotic Controller Construction");
+   //   Serial.print("RoboticController instance created at: ");
+ //   Serial.println((uintptr_t)this, HEX);
        ESP32PWM::allocateTimer(0);
     ESP32PWM::allocateTimer(1);
     ESP32PWM::allocateTimer(2);
@@ -76,56 +77,48 @@ for (auto& limbData : _limbs) {
   limbData.Initialize();
 }
   preConnectionBaseAngle = 0;
-  preConnectionHipAngle = 45;
-  preConnectionKneeAngle = -90;
+  preConnectionHipAngle = 60;
+  preConnectionKneeAngle = -120;
 
    for (auto& limb : _limbs) {
   
    limb.SetLimbServos(preConnectionBaseAngle,preConnectionHipAngle,preConnectionKneeAngle);
   }
-       networkHandler.subscribeToEvents(this);
   networkHandler.SetRoboticController(this);
    networkHandler.initialize();
-
 }
 
 void RoboticController::OnMessageReceived1(int messageType, const std::vector<unsigned char>& message) 
 { 
-   // Serial.println(messageType);
    switch (messageType) {
         case 0:  // Connection established, sync time
             EstablishConnection();
-           // gyro.Calibrate();
             break;
         case 1:  // Return sensor data
-      //  SendRobotInfo();
             break;
         case 2:  // Set motor values
           if (message.size() >= sizeof(QuadrupedLimbData)) {
                 QuadrupedLimbData limbData;
                 memcpy(&limbData, message.data(), sizeof(QuadrupedLimbData));
 
-                // Debugging: Print raw bytes
-                // Serial.println("Raw Data:");
-                // for (size_t i = 0; i < sizeof(QuadrupedLimbData); ++i) {
-                //     Serial.print(message[i], HEX);
-                //     Serial.print(" ");
-                // }
-                // Serial.println();
+              flConnectedBaseAngle = limbData.BLBaseAngle;
+              flConnectedHipAngle = limbData.FLHipAngle;
+               flConnectedKneeAngle = limbData.FLKneeAngle;
 
-             //  connectedBaseAngle =  0;//limbData.FLBaseAngle;
-connectedHipAngle = limbData.BLHipAngle;
-               connectedKneeAngle = limbData.BLKneeAngle;
-//               for (auto& limb : _limbs) {
-// limb.SetLimbServos(0,limbData.BLHipAngle,limbData.BLKneeAngle);
-//               }
+   frConnectedBaseAngle = limbData.FRBaseAngle;
+              frConnectedHipAngle = limbData.FRHipAngle;
+               frConnectedKneeAngle = limbData.FRKneeAngle;
 
-                // Print the angle
-                Serial.print("BLHipAngle from network: ");
-                Serial.println(limbData.BLHipAngle);
-                 Serial.println(limbData.BLKneeAngle);
+                  brConnectedBaseAngle = limbData.BRBaseAngle;
+              brConnectedHipAngle = limbData.BRHipAngle;
+               brConnectedKneeAngle = limbData.BRKneeAngle;
+
+                  blConnectedBaseAngle = limbData.BLBaseAngle;
+              blConnectedHipAngle = limbData.BLHipAngle;
+               blConnectedKneeAngle = limbData.BLKneeAngle;
+
+                 connectedToClient = true;
             break;
-        // ... other cases ...
     }
    }
 }
@@ -198,27 +191,19 @@ void RoboticController::RunControllerLoop(){
 networkHandler.loop();
   if(!networkHandler.broadcasting){
        SendRobotInfo();
-       
-
-
- Serial.print("angles");
- Serial.println(connectedHipAngle);
-   Serial.println(connectedKneeAngle);
   }
-
-     for (auto& limb : _limbs) {
-if(!connectedToClient){
- limb.SetLimbServos(preConnectionBaseAngle,preConnectionHipAngle,preConnectionKneeAngle);
+  for (auto& limb : _limbs) {
+    if(!connectedToClient){
+      limb.SetLimbServos(preConnectionBaseAngle,preConnectionHipAngle,preConnectionKneeAngle);
+    }
+    else{
+      //  _limbs[0].SetLimbServos(flConnectedBaseAngle,flConnectedHipAngle,flConnectedKneeAngle);
+      //  _limbs[1].SetLimbServos(frConnectedBaseAngle,frConnectedHipAngle,frConnectedKneeAngle);
+      //  _limbs[2].SetLimbServos(brConnectedBaseAngle,brConnectedHipAngle,brConnectedKneeAngle);
+      //  _limbs[3].SetLimbServos(blConnectedBaseAngle,blConnectedHipAngle,blConnectedKneeAngle);
+    }
+  }
 }
-else{
-
- // limb.SetLimbServos(connectedBaseAngle,connectedHipAngle,connectedKneeAngle);
-}
-}
-   // Serial.println(connectedToClient);
-
-}
-
 
 void RoboticController::OnConnectionTimeout(){
 connectedToClient = false;
@@ -227,10 +212,9 @@ void RoboticController::OnConnectionTimeout1(){
 connectedToClient = false;
 }
 
-
 void RoboticController::EstablishConnection() {
   Serial.print("Connection Request Received : ");
-connectedToClient = true;
+
 Serial1.println(connectedToClient);
   networkHandler.AttemptEstablishConnection();
 }
