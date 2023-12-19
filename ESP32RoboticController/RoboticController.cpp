@@ -135,6 +135,8 @@ void serializeQuadrupedData(const QuadrupedData& data, uint8_t* buffer) {
 }
 
 void RoboticController::SendRobotInfo() {
+  uint8_t* buffer = nullptr;
+
     try {
         QuadrupedData data;
 
@@ -173,18 +175,20 @@ else if(limbCount == 3){
 }
 limbCount++;
         }
-        uint8_t* buffer = new uint8_t[sizeof(QuadrupedData)];
+        buffer = new uint8_t[sizeof(QuadrupedData)];
        
         serializeQuadrupedData(data, buffer);
         networkHandler.sendMessage(1, buffer, sizeof(QuadrupedData));
-  return;
-        delete[] buffer;
+ 
+       
     } catch (const std::exception& e) {
         Serial.print("Exception caught: ");
         Serial.println(e.what());
     } catch (...) {
         Serial.println("Unknown exception caught");
     }
+
+     delete[] buffer;
 }
 
 void RoboticController::RunControllerLoop(){
