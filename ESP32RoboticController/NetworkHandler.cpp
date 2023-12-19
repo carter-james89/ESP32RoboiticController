@@ -3,6 +3,7 @@
 #include <WiFi.h>
 #include <ArduinoJson.h>
 
+
 const char* ssid = "because-fi";
 const char* password = "DaveReevis";
 
@@ -21,7 +22,7 @@ NetworkHandler::NetworkHandler(int cPort,  unsigned long timeout)
 }
 void NetworkHandler::initialize(){
       // xTaskCreate(this->Task, "ClassBTask", 10000, this, 1, NULL);
-  connectToWifi();
+     connectToWifi();
 
      StaticJsonDocument<200> doc;
       doc["BoardType"] = "esp32";
@@ -147,58 +148,43 @@ void NetworkHandler::OnConnectionLost(){
 void NetworkHandler::checkForIncomingPackets() {
     int packetSize = connectionUDP.parsePacket();
     if (packetSize) {
-        // Allocate a buffer to hold the incoming packet data.
-        byte packetData[packetSize]; // No need for +1 since we're not working with strings here
-        int bytesRead = connectionUDP.read(packetData, packetSize);
+        // Read the incoming packet into the static messageBuffer
+        int bytesRead = connectionUDP.read(messageBuffer, min(packetSize, MAX_MESSAGE_SIZE));
         if (bytesRead > 0) {
-           // Serial.print("got message");
             // Check if the packet contains at least the size of the header
             if (bytesRead >= sizeof(int)) {
-                  lastResponseTime = millis();
+                lastResponseTime = millis();
                 // Extract the header from the packet
                 int header;
-                memcpy(&header, packetData, sizeof(header));
+                memcpy(&header, messageBuffer, sizeof(header));
 
                 if(broadcasting && header !=0){
-                       Serial.println("Got header that isnt connection while broadcasting");
-                       return;
+                    Serial.println("Got header that isn't connection while broadcasting");
+                    return;
                 }
 
                 // Calculate the size of the actual message
                 int messageSize = bytesRead - sizeof(header);
 
-                // Allocate a buffer for the message content
-                byte* messageContent = new byte[messageSize];
+                // Use the static buffer (messageBuffer) directly to handle the message content
+                // Ensure that messageSize is within bounds to prevent buffer overflows
 
-                // Copy the message content from the packet, skipping the header
-                memcpy(messageContent, packetData + sizeof(header), messageSize);
+                std::vector<unsigned char> messageVector;
+                // Only fill the vector if there is actual content
+                if (messageSize > 0) {
+                    messageVector.assign(messageBuffer + sizeof(header), messageBuffer + sizeof(header) + messageSize);
+                }
+                else {
+                    // Handle empty message case
+                }
 
-             
-std::vector<unsigned char> messageVector;
-// Only fill the vector if there is actual content
-if (messageContent && messageSize > 0) {
-    messageVector.assign(messageContent, messageContent + messageSize);
-}
-else{
-   //   Serial.print("empty message");
-}
-if (roboticControler != nullptr) {
-    roboticControler->OnMessageReceived1(header, messageVector);
-} else {
-    Serial.println("roboticControler is null!");
-}
+                if (roboticControler != nullptr) {
+                    roboticControler->OnMessageReceived1(header, messageVector);
+                } else {
+                    Serial.println("roboticControler is null!");
+                }
 
-//Something is wrong with this
-// for (INetworkHandlerEventListener* listener : eventListeners) {
-//     if (listener != nullptr) {
-//          //Serial.print("send event");
-//         // Call a method on the listener
-//         // For example, if you have a method like OnEventOccurred()
-//          listener->OnMessageReceived(header, messageVector);
-//     }
-// }
-                // Clean up the allocated message content buffer
-                delete[] messageContent;
+                // No need for dynamic memory allocation or cleanup
             }
         }
     }

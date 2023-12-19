@@ -36,7 +36,7 @@ void setup() {
 }
 void loop() {
   _roboticController->RunControllerLoop();
-   delay(10);
+   delay(100);
 
 
 

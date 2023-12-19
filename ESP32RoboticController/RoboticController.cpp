@@ -197,10 +197,10 @@ networkHandler.loop();
       limb.SetLimbServos(preConnectionBaseAngle,preConnectionHipAngle,preConnectionKneeAngle);
     }
     else{
-      //  _limbs[0].SetLimbServos(flConnectedBaseAngle,flConnectedHipAngle,flConnectedKneeAngle);
-      //  _limbs[1].SetLimbServos(frConnectedBaseAngle,frConnectedHipAngle,frConnectedKneeAngle);
-      //  _limbs[2].SetLimbServos(brConnectedBaseAngle,brConnectedHipAngle,brConnectedKneeAngle);
-      //  _limbs[3].SetLimbServos(blConnectedBaseAngle,blConnectedHipAngle,blConnectedKneeAngle);
+       _limbs[0].SetLimbServos(flConnectedBaseAngle,flConnectedHipAngle,flConnectedKneeAngle);
+       _limbs[1].SetLimbServos(frConnectedBaseAngle,frConnectedHipAngle,frConnectedKneeAngle);
+       _limbs[2].SetLimbServos(brConnectedBaseAngle,brConnectedHipAngle,brConnectedKneeAngle);
+       _limbs[3].SetLimbServos(blConnectedBaseAngle,blConnectedHipAngle,blConnectedKneeAngle);
     }
   }
 }

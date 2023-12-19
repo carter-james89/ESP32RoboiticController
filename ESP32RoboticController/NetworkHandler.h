@@ -25,6 +25,9 @@ private:
     int broadcastPort;
     int connectionPort;
     String broadcastIP;
+
+        static const int MAX_MESSAGE_SIZE = 96;  // Adjust this value based on your requirements
+        byte messageBuffer[MAX_MESSAGE_SIZE];
   
     unsigned long _previousBroadcastMillis; // Changed type to unsigned long
     String connectionDataJson;
