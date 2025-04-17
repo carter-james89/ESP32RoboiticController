@@ -12,7 +12,7 @@ BittleQuadrupedConstructor::BittleQuadrupedConstructor() {
 void BittleQuadrupedConstructor::GetLimbs(std::vector<RoboticLimb>& limbs) {
       DigitalServo::ServoBuildData flHipConfig;
         flHipConfig.pin = 33;
-        flHipConfig.angleOffset = 45;
+        flHipConfig.angleOffset = 53;
         flHipConfig.pwmOffset = 0;
         flHipConfig.minPWM = 500;
         flHipConfig.maxPWM = 2500;
@@ -21,7 +21,7 @@ void BittleQuadrupedConstructor::GetLimbs(std::vector<RoboticLimb>& limbs) {
         flHipConfig.flip = false;
    DigitalServo:: ServoBuildData flKneeConfig;
         flKneeConfig.pin = 19;
-        flKneeConfig.angleOffset = 45;
+        flKneeConfig.angleOffset = 43;
         flKneeConfig.pwmOffset = 0;
         flKneeConfig.minPWM = 500;
         flKneeConfig.maxPWM = 2500;
@@ -62,7 +62,7 @@ limbs.push_back(RoboticLimb("FL Limb", std::vector<LimbSegment>{
 
       DigitalServo::ServoBuildData brHipConfig;
         brHipConfig.pin = 15;
-        brHipConfig.angleOffset = -45;
+        brHipConfig.angleOffset = -55;
         brHipConfig.pwmOffset = 0;
         brHipConfig.minPWM = 500;
         brHipConfig.maxPWM = 2500;
@@ -87,7 +87,7 @@ limbs.push_back(RoboticLimb("FL Limb", std::vector<LimbSegment>{
 
       DigitalServo::ServoBuildData blHipConfig;
         blHipConfig.pin = 14;
-        blHipConfig.angleOffset = -45;
+        blHipConfig.angleOffset = -42;
         blHipConfig.pwmOffset = 0;
         blHipConfig.minPWM = 500;
         blHipConfig.maxPWM = 2500;
@@ -96,7 +96,7 @@ limbs.push_back(RoboticLimb("FL Limb", std::vector<LimbSegment>{
         blHipConfig.flip = false;
    DigitalServo:: ServoBuildData blKneeConfig;
         blKneeConfig.pin = 27;
-        blKneeConfig.angleOffset = 45;
+        blKneeConfig.angleOffset = 35;
         blKneeConfig.pwmOffset = 0;
         blKneeConfig.minPWM = 500;
         blKneeConfig.maxPWM = 2500;

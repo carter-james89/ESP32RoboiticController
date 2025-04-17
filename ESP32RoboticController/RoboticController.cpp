@@ -77,8 +77,8 @@ for (auto& limbData : _limbs) {
   limbData.Initialize();
 }
   preConnectionBaseAngle = 0;
-  preConnectionHipAngle = 60;
-  preConnectionKneeAngle = -120;
+  preConnectionHipAngle = 65;
+  preConnectionKneeAngle = -145;
 
    for (auto& limb : _limbs) {
   

@@ -59,9 +59,9 @@ void setup() {
 
 }
 void loop() {
-  printMemoryUsage();
+ // printMemoryUsage();
   _roboticController->RunControllerLoop();
-   delay(100);
+   delay(50);
 
 
 
