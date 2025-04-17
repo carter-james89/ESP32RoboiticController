@@ -1,103 +1,78 @@
-#ifndef DIGITALSERVO_H
-#define DIGITALSERVO_H
+// DigitalServo.h
+#pragma once
 
 #include <ESP32Servo.h>
+#include <string>
 
+/**
+ * @struct ServoBuildData
+ * @brief Configuration parameters for a PWM-controlled servo.
+ */
+struct ServoBuildData {
+    uint8_t pin = 0;              ///< GPIO pin number.
+    float   angleOffset = 0.0f;   ///< Mechanical zero offset (degrees).
+    float   pwmOffset = 0.0f;     ///< Additional PWM offset (µs).
+    int     minPWM = 500;         ///< Min pulse width (µs).
+    int     maxPWM = 2500;        ///< Max pulse width (µs).
+    int     minAngleLimit = -135; ///< Min allowed angle (degrees).
+    int     maxAngleLimit = 135;  ///< Max allowed angle (degrees).
+    bool    flip = false;         ///< Reverse movement direction.
+};
+
+/**
+ * @class DigitalServo
+ * @brief Wraps ESP32Servo for safe, configurable servo control on ESP32.
+ */
 class DigitalServo {
 public:
-struct ServoBuildData {
-  //  String Name;
-    int pin;
-    int angleOffset;
-    int pwmOffset;
-    int minPWM;
-    int maxPWM;
-    int minAngleLimit;
-    int maxAngleLimit;
-    bool flip;
+    /**
+     * @brief Default-constructs an uninitialized servo.
+     */
+    DigitalServo() = default;
 
-       // Default constructor
-    ServoBuildData() : pin(0), angleOffset(0), pwmOffset(0), minPWM(0), maxPWM(0), minAngleLimit(0), maxAngleLimit(0), flip(false) {}
+    /**
+     * @brief Constructs and configures a servo instance.
+     * @param name Informative name for debugging.
+     * @param config Build parameters for servo operation.
+     */
+    DigitalServo(const std::string& name, const ServoBuildData& config);
 
+    DigitalServo(const DigitalServo&) = delete;            ///< non-copyable
+    DigitalServo& operator=(const DigitalServo&) = delete; ///< non-assignable
 
-        // Custom copy constructor
-    ServoBuildData(const ServoBuildData& other)
-        : pin(other.pin),
-          angleOffset(other.angleOffset),
-          pwmOffset(other.pwmOffset),
-          minPWM(other.minPWM),
-          maxPWM(other.maxPWM),
-          minAngleLimit(other.minAngleLimit),
-          maxAngleLimit(other.maxAngleLimit),
-          flip(other.flip) {}
+    ~DigitalServo(); ///< Detaches if initialized
 
-    // Assignment operator
-    ServoBuildData& operator=(const ServoBuildData& other) {
-        if (this != &other) {
-            pin = other.pin;
-            angleOffset = other.angleOffset;
-            pwmOffset = other.pwmOffset;
-            minPWM = other.minPWM;
-            maxPWM = other.maxPWM;
-            minAngleLimit = other.minAngleLimit;
-            maxAngleLimit = other.maxAngleLimit;
-            flip = other.flip;
-        }
-        return *this;
-    }
-};
+    /**
+     * @brief Initializes hardware and attaches PWM channel.
+     */
+    void initialize();
 
-          DigitalServo();
-void Initialize();
-    DigitalServo(String servoName, ServoBuildData buildData);
-    void writeMicroseconds(int value);
-    void SetAngle(int position);
-    void Update();
-    int GetAngle();
+    /**
+     * @brief Set servo to target angle (degrees).
+     * @param angle Desired angle.
+     */
+    void setAngle(int angle);
 
-     DigitalServo(const DigitalServo& other);
+    /**
+     * @brief Retrieve the last commanded angle.
+     * @return Current commanded angle.
+     */
+    int getAngle() const noexcept;
+
+    /**
+     * @brief Periodic update hook (optional).
+     */
+    void update();
 
 private:
-ServoBuildData configData;
-int _angle;
-bool _initialized;
-    Servo _servo;
-       int _minPWM;
     void attach();
     void detach();
-    bool attached;
-String servoName;
-int Pin;
-    int Map(int x, int in_min, int in_max, int out_min, int out_max) ;
+    void writeMicroseconds(int us);
+    static int mapValue(int x, int in_min, int in_max, int out_min, int out_max);
+
+    std::string   name_;          ///< Debug name
+    ServoBuildData config_;       ///< Build-time parameters
+    Servo         servo_;         ///< Underlying servo object
+    bool          initialized_{}; ///< True after attach()
+    int           currentAngle_{};///< Last commanded angle
 };
-
-#endif // DIGITALSERVO_H
-
-
-// #ifndef DigitalServo_h
-// #define DigitalServo_h
-
-// #include "Arduino.h" 
-// #include <ESP32Servo.h>
-
-// class DigitalServo 
-// {
-// private :
-//   int _servoNumber;
-//   int _servoChannel;
-//   int _maxPWM;
-//   int _minPWM;
-//       int _homePWM;
-//       int _maxRange;
-//   int _minAngleLimit;
-// int _maxAngleLimit;
-// bool _flip;
-// //static int _servoChannel;
-
-
-// public : 
-//   DigitalServo(int servoNumber, int servoChannel, int homePWM, int minPWM, int MaxPWM, int servoRange, int minAngle, int maxAngle,  bool flip);
-//   void SetPosition(float angle);
-
-// };
-// #endif
