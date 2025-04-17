@@ -10,7 +10,7 @@ class BittleQuadrupedConstructor  {
 public:
 
     BittleQuadrupedConstructor();
-     void  GetLimbs(std::vector<RoboticLimb>& limbs);
+     void  GetLimbs(std::vector<RoboticLimb>& limbs) const;
     private:
    //  std::vector<DigitalServoConfiguration*> servoConfigs;
    // std::vector<QuadrupedLimbData*> limbData;

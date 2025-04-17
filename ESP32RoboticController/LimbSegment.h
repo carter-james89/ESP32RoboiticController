@@ -2,39 +2,31 @@
 #define LIMBSEGMENT_H
 
 #include "DigitalServo.h"
-#include <vector>  // Include the vector header
-
-
+#include <vector>
 
 class LimbSegment {
 public:
-    // Constructor
-    LimbSegment(String name);
-
-        // Constructor
-   // LimbSegment(String name, LimbSegmentBuildData configData);
-LimbSegment(String name, float length, DigitalServo servo);
-     LimbSegment(const LimbSegment& other);
-    // Destructor
+    explicit LimbSegment(const String& name);
+    explicit LimbSegment(const String& name, float length, const DigitalServo& servo);
+    LimbSegment(const LimbSegment& other);
     ~LimbSegment();
-void Initialize();
-    // Member functions can be added here
+
+    void Initialize();
+
     void activate();
     void deactivate();
 
-    double GetLength();
-
-int GetServoAngle();
-   void SetServoAngle(int newAngle);
+    double GetLength() const;
+    int GetServoAngle() const;
+    void SetServoAngle(int newAngle);
 
 private:
-    // Member variables can be added here
-    bool isActive;
-    double _length;
-   DigitalServo  _servo; 
-   String _name;
-bool _initialized;
+    bool isActive = true;
+    bool _initialized = false;
+    double _length = 0.0;
 
+    DigitalServo _servo;
+    String _name;
 };
 
 #endif // LIMBSEGMENT_H

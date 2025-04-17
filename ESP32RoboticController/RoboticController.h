@@ -1,73 +1,57 @@
 #ifndef ROBOTICCONTROLLER_H
 #define ROBOTICCONTROLLER_H
 
-//#include <mutex>
-
-
 #include "INetworkHandlerEventListener.h"
-#include <iostream>
-#include <vector>
 #include "RoboticLimb.h"
 #include "BittleQuadrupedConstructor.h"
+#include <array>
+#include <vector>
 
 class RoboticController : public INetworkHandlerEventListener {
 public:
-  // Default constructor 
-   RoboticController();
-    // Constructor
-  //  RoboticController(BittleQuadrupedConfiguration& config);
-RoboticController(BittleQuadrupedConstructor constructor);
-    // Destructor
+    explicit RoboticController();
+    explicit RoboticController(const BittleQuadrupedConstructor& constructor);
     ~RoboticController();
 
-    // Member functions
     void RunControllerLoop();
     void activate();
     void deactivate();
     bool isActivated() const;
-  //void OnMessageReceived(int messageType, const std::vector<unsigned char>& message);
- 
-      // Correctly overriding the OnMessageReceived method from INetworkHandlerEventListener
-    void OnMessageReceived(int messageType, const std::vector<unsigned char>& message) override;
-    void OnConnectionTimeout() override ;
- void OnConnectionTimeout1();
-      void OnMessageReceived1(int messageType, const std::vector<unsigned char>& message);
 
-      void SendRobotInfo();
-     
+    void OnMessageReceived(int messageType, const std::vector<unsigned char>& message) override;
+    void OnConnectionTimeout() override;
+
+    void SendRobotInfo();
+    void CalculateIKAllLimbs();
 
 private:
- //std::mutex mtx; 
-   bool activated;
-    bool connectedToClient;
-   std::vector<RoboticLimb> _limbs;
- void RunSpeedTest();
-    void calculateRotation(bool resetOffset);
-    void runSensors();
-    void calculateHeight();
-     void EstablishConnection();
- void SerializeInt(byte* message, int value, int& offset, int messageSize);
- //RoboticLimb ConstructRoboticLimb(QuadrupedLimbData limbData);
- int preConnectionBaseAngle;
-  int preConnectionHipAngle;
-   int preConnectionKneeAngle;
+    void EstablishConnection();
+    void SerializeInt(byte* message, int value, int& offset, int messageSize);
 
+    bool activated = false;
+    bool connectedToClient = false;
 
-    int flConnectedBaseAngle;
-  int flConnectedHipAngle;
-   int flConnectedKneeAngle;
+    std::vector<RoboticLimb> _limbs;
 
-       int frConnectedBaseAngle;
-  int frConnectedHipAngle;
-   int frConnectedKneeAngle;
+    int preConnectionBaseAngle = 0;
+    int preConnectionHipAngle = 65;
+    int preConnectionKneeAngle = -145;
 
-       int brConnectedBaseAngle;
-  int brConnectedHipAngle;
-   int brConnectedKneeAngle;
+    int flConnectedBaseAngle = 0;
+    int flConnectedHipAngle = 0;
+    int flConnectedKneeAngle = 0;
 
-       int blConnectedBaseAngle;
-  int blConnectedHipAngle;
-   int blConnectedKneeAngle;
+    int frConnectedBaseAngle = 0;
+    int frConnectedHipAngle = 0;
+    int frConnectedKneeAngle = 0;
+
+    int brConnectedBaseAngle = 0;
+    int brConnectedHipAngle = 0;
+    int brConnectedKneeAngle = 0;
+
+    int blConnectedBaseAngle = 0;
+    int blConnectedHipAngle = 0;
+    int blConnectedKneeAngle = 0;
 };
 
 #endif // ROBOTICCONTROLLER_H
