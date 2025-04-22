@@ -24,6 +24,25 @@ struct QuadrupedData {
     int BRBaseAngle, BRHipAngle, BRKneeAngle;
     int BLBaseAngle, BLHipAngle, BLKneeAngle;
 };
+struct QuadrupedLimbData
+    {
+      public:
+         float FLBaseAngle;
+         float FLHipAngle;
+         float FLKneeAngle;
+
+         float FRBaseAngle;
+         float FRHipAngle;
+         float FRKneeAngle;
+
+         float BRBaseAngle;
+         float BRHipAngle;
+         float BRKneeAngle;
+
+         float BLBaseAngle;
+         float BLHipAngle;
+         float BLKneeAngle;
+    };
 
 RoboticController::RoboticController() {}
 
@@ -64,14 +83,16 @@ void RoboticController::RunControllerLoop() {
 }
 
 void RoboticController::OnMessageReceived(int messageType, const std::vector<unsigned char>& message) {
+    //Serial.println(messageType);
+    delay(10);
     switch (messageType) {
         case 0:
             EstablishConnection();
             break;
         case 2:
-            if (message.size() >= sizeof(QuadrupedData)) {
-                QuadrupedData data;
-                memcpy(&data, message.data(), sizeof(QuadrupedData));
+            if (message.size() >= sizeof(QuadrupedLimbData)) {
+                QuadrupedLimbData data;
+                memcpy(&data, message.data(), sizeof(QuadrupedLimbData));
 
                 flConnectedBaseAngle = data.FLBaseAngle;
                 flConnectedHipAngle = data.FLHipAngle;
