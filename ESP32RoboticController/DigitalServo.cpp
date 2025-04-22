@@ -13,6 +13,16 @@ DigitalServo::DigitalServo(const String& name, const ServoBuildData& buildData)
       attached(false),
       servoName(name) {}
 
+      DigitalServo::DigitalServo(const DigitalServo& other)
+    : configData(other.configData),
+      _angle(other._angle),
+      _initialized(false),
+      attached(false),
+      servoName(other.servoName) {
+    // Do NOT copy _servo directly — re-attach in Initialize if needed
+}
+
+
 
 // Initialize and attach the servo (only once)
 void DigitalServo::Initialize() {

@@ -21,8 +21,7 @@ public:
     };
 
     DigitalServo();
-    DigitalServo(String servoName, ServoBuildData buildData);
-    DigitalServo::DigitalServo(const String& name, const ServoBuildData& buildData);
+    DigitalServo(const String& name, const ServoBuildData& buildData);
     DigitalServo(const DigitalServo& other);
 
     void Initialize();
