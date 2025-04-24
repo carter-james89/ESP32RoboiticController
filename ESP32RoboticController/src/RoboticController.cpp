@@ -48,6 +48,7 @@ RoboticController::RoboticController(const BittleQuadrupedConstructor& construct
         limb.SetLimbServos(preConnectionBaseAngle, preConnectionHipAngle, preConnectionKneeAngle);
     }
 
+    networkHandler.subscribeToEvents(this);
   //  networkHandler.SetRoboticController(this);
     networkHandler.initialize();
 

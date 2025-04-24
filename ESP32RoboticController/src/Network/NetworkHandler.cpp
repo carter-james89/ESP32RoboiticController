@@ -76,8 +76,10 @@ void NetworkHandler::SendConnectionBroadcast() {
     if (broadcasting && (millis() - _previousBroadcastMillis >= 10000)) {
         broadcastUDP.beginPacket(broadcastIP.c_str(), broadcastPort);
         broadcastUDP.print(connectionDataJson);
-        broadcastUDP.endPacket();
+        int r = broadcastUDP.endPacket();
+        Serial.print("endPacket() returned "); Serial.println(r);
         Serial.print("Broadcast message sent ");
+        Serial.print(broadcastIP);
         Serial.println(broadcastPort);
         _previousBroadcastMillis = millis();
     } else if (!broadcasting && (millis() - lastResponseTime > responseTimeout)) {
