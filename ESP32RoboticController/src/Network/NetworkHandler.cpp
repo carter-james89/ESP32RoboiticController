@@ -41,8 +41,21 @@ void NetworkHandler::NotifyListenersConnected(){
     
 }
 
+void NetworkHandler::NotifyListenersDisconnected(){
+
+}
+
+void NetworkHandler::NotifyListenersMessageRecieved(int messageType, const std::vector<unsigned char>& message){
+    for (auto* listener : eventListeners) {
+        if (listener) {
+            listener->OnMessageReceived(messageType,message);
+        }
+    }
+}
+
 
 void NetworkHandler::connectToWifi() {
+   // WiFi.mode(WIFI_STA);
     WiFi.begin(ssid, password);
     while (WiFi.status() != WL_CONNECTED) {
         Serial.print("Attempting to Connect to WIFI : ");
@@ -59,13 +72,17 @@ void NetworkHandler::SendEmptyResponse(int header) {
     sendMessage(header, dummy, 0);
 }
 
-void NetworkHandler::sendBroadcast() {
-    broadcastUDP.beginPacket(broadcastIP.c_str(), broadcastPort);
-    broadcastUDP.print(connectionDataJson);
-    broadcastUDP.endPacket();
-    Serial.print("Broadcast message sent ");
-    Serial.println(broadcastPort);
-    _previousBroadcastMillis = millis();
+void NetworkHandler::SendConnectionBroadcast() {
+    if (broadcasting && (millis() - _previousBroadcastMillis >= 10000)) {
+        broadcastUDP.beginPacket(broadcastIP.c_str(), broadcastPort);
+        broadcastUDP.print(connectionDataJson);
+        broadcastUDP.endPacket();
+        Serial.print("Broadcast message sent ");
+        Serial.println(broadcastPort);
+        _previousBroadcastMillis = millis();
+    } else if (!broadcasting && (millis() - lastResponseTime > responseTimeout)) {
+        OnConnectionTimeout();
+    }
 }
 
 void NetworkHandler::sendMessage(int header, byte* message, int messageSize) {
@@ -94,18 +111,11 @@ void NetworkHandler::OnConnectionTimeout() {
 }
 
 void NetworkHandler::loop() {
-// QuadrupedData data = roboticControler->GetQuadrupedData();
-//     uint8_t buffer[sizeof(QuadrupedData)];
-    // memcpy(buffer, &data, sizeof(QuadrupedData));
-    // sendMessage(1, buffer, sizeof(QuadrupedData));
-    
-    checkForIncomingPackets();
 
-    if (broadcasting && (millis() - _previousBroadcastMillis >= 10000)) {
-        sendBroadcast();
-    } else if (!broadcasting && (millis() - lastResponseTime > responseTimeout)) {
-        OnConnectionTimeout();
-    }
+    
+    //checkForIncomingPackets();
+
+ 
 }
 
 void NetworkHandler::AttemptEstablishConnection() {

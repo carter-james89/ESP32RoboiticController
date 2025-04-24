@@ -5,6 +5,8 @@
 #include <Arduino.h>
 #include <cmath>
 #include <cstring>
+#include <thread>
+#include <mutex>
 
 Gyro gyro;
 const int broadcastPort = 5501;
@@ -48,12 +50,49 @@ RoboticController::RoboticController(const BittleQuadrupedConstructor& construct
 
   //  networkHandler.SetRoboticController(this);
     networkHandler.initialize();
+
+    // xTaskCreatePinnedToCore(
+    //     ControllerTaskFunc,
+    //     "ControllerTask",
+    //     4096,            // Stack size in words
+    //     this,            // Parameter to pass
+    //     1,               // Task priority
+    //     &_controllerTaskHandle,
+    //     1                // Core 1 (usually best for Wi-Fi + user tasks)
+    // );
 }
 
-RoboticController::~RoboticController() {}
+RoboticController::~RoboticController() {
+    if (_controllerTaskHandle) {
+        vTaskDelete(_controllerTaskHandle);
+        _controllerTaskHandle = nullptr;
+    }
+    
+}
 
+
+static void ControllerTaskFunc(void* param) {
+    RoboticController* controller = static_cast<RoboticController*>(param);
+    while (true) {
+        controller->RunControllerLoop();
+        vTaskDelay(pdMS_TO_TICKS(20));  // maintain 50Hz loop rate
+    }
+}
 void RoboticController::RunControllerLoop() {
    // networkHandler.loop();
+   networkHandler.checkForIncomingPackets();
+   if(!connectedToClient){
+    networkHandler.SendConnectionBroadcast();
+   }
+   else{
+    QuadrupedData data = GetQuadrupedData();
+    uint8_t buffer[sizeof(QuadrupedData)];
+   memcpy(buffer, &data, sizeof(QuadrupedData));
+   networkHandler.sendMessage(1, buffer, sizeof(QuadrupedData));
+
+
+   }
+
 
     if (!connectedToClient) {
         for (auto& limb : _limbs) {
@@ -96,7 +135,7 @@ void RoboticController::OnMessageReceived(int messageType, const std::vector<uns
                 blConnectedHipAngle = data.BLHipAngle;
                 blConnectedKneeAngle = data.BLKneeAngle;
 
-                connectedToClient = true;
+                
             }
             break;
     }
@@ -144,7 +183,7 @@ void RoboticController::CalculateIKAllLimbs() {
 void RoboticController::OnConnectionEstablished() {
     Serial.print("Connection Request Received: ");
     Serial1.println(connectedToClient);
-    networkHandler.AttemptEstablishConnection();
+    connectedToClient = true;
 }
 void RoboticController::OnConnectionTimeout() {
     connectedToClient = false;

@@ -10,7 +10,7 @@
 class NetworkHandler {
 public:
     bool broadcasting;
-
+    void checkForIncomingPackets();
     NetworkHandler(int connectionPort, const String& broadcastIp, int broadcastPort, unsigned long timeout);
 
     void initialize(); 
@@ -19,6 +19,8 @@ public:
     void SendEmptyResponse(int header);
     void subscribeToEvents(NetworkEventListener* listener);
     void AttemptEstablishConnection();
+
+    void SendConnectionBroadcast();
 
 private:
     WiFiUDP broadcastUDP;
@@ -50,8 +52,8 @@ private:
     void OnConnectionLost();
     void OnConnectionTimeout();
 
-    void sendBroadcast();
-    void checkForIncomingPackets();
+ 
+
     void connectToWifi();
 };
 

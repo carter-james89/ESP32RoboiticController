@@ -6,6 +6,9 @@
 #include "RoboticConstructor/BittleQuadrupedConstructor.h"
 #include <array>
 #include <vector>
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
+
 
 struct QuadrupedData {
     int16_t VelocityX;
@@ -42,6 +45,8 @@ public:
 
 private:
     void SerializeInt(byte* message, int value, int& offset, int messageSize);
+
+    TaskHandle_t _controllerTaskHandle = nullptr;
 
     bool activated = false;
     bool connectedToClient = false;
