@@ -1,8 +1,11 @@
 // NetworkHandler.cpp
-#include "NetworkHandler.h"
+#include "NetworkEventListener.h"
+#include "NetworkHandler.h"  // <-- this must be here!
 #include <Arduino.h>
 #include <WiFi.h>
 #include <ArduinoJson.h>
+
+
 
 const char* ssid = "because-fi";
 const char* password = "DaveReevis";
@@ -25,13 +28,19 @@ void NetworkHandler::initialize() {
     connectionUDP.begin(connectionPort);
 }
 
-void NetworkHandler::subscribeToEvents(INetworkHandlerEventListener* listener) {
+void NetworkHandler::subscribeToEvents(NetworkEventListener* listener) {
     eventListeners.push_back(listener);
 }
 
-void NetworkHandler::SetRoboticController(RoboticController* rc) {
-    roboticControler = rc;
+void NetworkHandler::NotifyListenersConnected(){
+    for (auto* listener : eventListeners) {
+        if (listener) {
+            listener->OnConnectionEstablished();
+        }
+    }
+    
 }
+
 
 void NetworkHandler::connectToWifi() {
     WiFi.begin(ssid, password);
@@ -81,11 +90,15 @@ void NetworkHandler::sendMessage(int header, byte* message, int messageSize) {
 void NetworkHandler::OnConnectionTimeout() {
     Serial.println("Connection timeout");
     firstTimeout = true;
-    if (roboticControler) roboticControler->OnConnectionTimeout();
     OnConnectionLost();
 }
 
 void NetworkHandler::loop() {
+// QuadrupedData data = roboticControler->GetQuadrupedData();
+//     uint8_t buffer[sizeof(QuadrupedData)];
+    // memcpy(buffer, &data, sizeof(QuadrupedData));
+    // sendMessage(1, buffer, sizeof(QuadrupedData));
+    
     checkForIncomingPackets();
 
     if (broadcasting && (millis() - _previousBroadcastMillis >= 10000)) {
@@ -107,11 +120,13 @@ void NetworkHandler::OnConnectionEstablished() {
     broadcasting = false;
     lastResponseTime = millis();
     firstTimeout = true;
+    NotifyListenersConnected();
 }
 
 void NetworkHandler::OnConnectionLost() {
     broadcasting = true;
     _previousBroadcastMillis = millis() - 10000;
+    NotifyListenersDisconnected();
 }
 
 void NetworkHandler::checkForIncomingPackets() {
@@ -135,11 +150,14 @@ void NetworkHandler::checkForIncomingPackets() {
                 messageVector.assign(messageBuffer.begin() + sizeof(header), messageBuffer.begin() + sizeof(header) + messageSize);
             }
 
-            if (roboticControler != nullptr) {
-                roboticControler->OnMessageReceived(header, messageVector);
-            } else {
-                Serial.println("roboticControler is null!");
+            if(header == 0){
+                AttemptEstablishConnection();
             }
+            else{
+                NotifyListenersMessageRecieved(header,messageVector);
+            }
+
+
         }
     }
 }

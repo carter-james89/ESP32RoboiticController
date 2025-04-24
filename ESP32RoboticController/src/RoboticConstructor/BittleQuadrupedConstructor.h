@@ -1,7 +1,7 @@
 #ifndef BITTLEQUADRUPEDCONSTRUCTOR_H
 #define BITTLEQUADRUPEDCONSTRUCTOR_H
 
-#include "RoboticLimb.h"
+#include "../Limbs/RoboticLimb.h"
 #include <vector>
 
 // Default constructor

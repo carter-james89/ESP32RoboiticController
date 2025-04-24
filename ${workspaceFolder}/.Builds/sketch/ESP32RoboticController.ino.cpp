@@ -1,3 +1,4 @@
+#line 1 "C:\\Users\\carte\\Projects\\Robotics\\Quadruped\\ESP32 Robotic Controller\\ESP32RoboticController\\ESP32RoboticController.ino"
 #include <Arduino.h>
 #include <ArduinoJson.h>
 #include <WiFiClient.h>
@@ -5,9 +6,8 @@
 #include <WiFiUdp.h>
 #include <lwip/sockets.h>
 #include <esp_heap_caps.h>
-#include "src/RoboticConstructor/BittleQuadrupedConstructor.h"
-#include "src/RoboticController.h"
-
+#include "BittleQuadrupedConstructor.h"
+#include "RoboticController.h"
 
 namespace {
   constexpr int kSerialBaud   = 115200;
@@ -38,3 +38,4 @@ void loop() {
   pController->RunControllerLoop();
   vTaskDelay(pdMS_TO_TICKS(kLoopPeriodMs));
 }
+

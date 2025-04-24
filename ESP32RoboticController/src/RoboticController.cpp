@@ -1,7 +1,7 @@
 // RoboticController.cpp
 #include "RoboticController.h"
 #include "Gyro.h"
-#include "NetworkHandler.h"
+#include "Network/NetworkHandler.h"
 #include <Arduino.h>
 #include <cmath>
 #include <cstring>
@@ -11,19 +11,7 @@ const int broadcastPort = 5501;
 const String broadcastIP = "255.255.255.255";
 NetworkHandler networkHandler(8081, broadcastIP, broadcastPort, 10000);
 
-struct QuadrupedData {
-    int16_t VelocityX;
-    int16_t VelocityY;
-    int16_t VelocityZ;
-    int16_t GyroX;
-    int16_t GyroY;
-    int16_t GyroZ;
 
-    int FLBaseAngle, FLHipAngle, FLKneeAngle;
-    int FRBaseAngle, FRHipAngle, FRKneeAngle;
-    int BRBaseAngle, BRHipAngle, BRKneeAngle;
-    int BLBaseAngle, BLHipAngle, BLKneeAngle;
-};
 struct QuadrupedLimbData
     {
       public:
@@ -58,17 +46,14 @@ RoboticController::RoboticController(const BittleQuadrupedConstructor& construct
         limb.SetLimbServos(preConnectionBaseAngle, preConnectionHipAngle, preConnectionKneeAngle);
     }
 
-    networkHandler.SetRoboticController(this);
+  //  networkHandler.SetRoboticController(this);
     networkHandler.initialize();
 }
 
 RoboticController::~RoboticController() {}
 
 void RoboticController::RunControllerLoop() {
-    networkHandler.loop();
-    if (!networkHandler.broadcasting) {
-        SendRobotInfo();
-    }
+   // networkHandler.loop();
 
     if (!connectedToClient) {
         for (auto& limb : _limbs) {
@@ -82,12 +67,13 @@ void RoboticController::RunControllerLoop() {
     }
 }
 
+void RoboticController::SyncRobotData(){
+    
+}
+
 void RoboticController::OnMessageReceived(int messageType, const std::vector<unsigned char>& message) {
-    //Serial.println(messageType);
-    delay(10);
     switch (messageType) {
         case 0:
-            EstablishConnection();
             break;
         case 2:
             if (message.size() >= sizeof(QuadrupedLimbData)) {
@@ -116,11 +102,7 @@ void RoboticController::OnMessageReceived(int messageType, const std::vector<uns
     }
 }
 
-void RoboticController::OnConnectionTimeout() {
-    connectedToClient = false;
-}
-
-void RoboticController::SendRobotInfo() {
+QuadrupedData RoboticController::GetQuadrupedData(){
     QuadrupedData data = {};
     int servoValues[3];
 
@@ -150,10 +132,7 @@ void RoboticController::SendRobotInfo() {
                 break;
         }
     }
-
-    uint8_t buffer[sizeof(QuadrupedData)];
-    memcpy(buffer, &data, sizeof(QuadrupedData));
-    networkHandler.sendMessage(1, buffer, sizeof(QuadrupedData));
+    return data;
 }
 
 void RoboticController::CalculateIKAllLimbs() {
@@ -162,10 +141,13 @@ void RoboticController::CalculateIKAllLimbs() {
     }
 }
 
-void RoboticController::EstablishConnection() {
+void RoboticController::OnConnectionEstablished() {
     Serial.print("Connection Request Received: ");
     Serial1.println(connectedToClient);
     networkHandler.AttemptEstablishConnection();
+}
+void RoboticController::OnConnectionTimeout() {
+    connectedToClient = false;
 }
 
 void RoboticController::activate() {

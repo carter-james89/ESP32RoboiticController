@@ -4,9 +4,9 @@
 #include <WiFiUdp.h>
 #include <array>
 #include <vector>
-#include "INetworkHandlerEventListener.h"
-#include "RoboticController.h"
+#include "NetworkEventListener.h"
 
+    
 class NetworkHandler {
 public:
     bool broadcasting;
@@ -17,8 +17,7 @@ public:
     void loop();
     void sendMessage(int header, byte* message, int messageSize);
     void SendEmptyResponse(int header);
-    void subscribeToEvents(INetworkHandlerEventListener* listener);
-    void SetRoboticController(RoboticController* rc);
+    void subscribeToEvents(NetworkEventListener* listener);
     void AttemptEstablishConnection();
 
 private:
@@ -27,6 +26,12 @@ private:
 
     unsigned long lastResponseTime;
     const unsigned long responseTimeout;
+
+    std::vector<NetworkEventListener*> eventListeners;
+
+    void NotifyListenersConnected();
+    void NotifyListenersDisconnected();
+    void NotifyListenersMessageRecieved(int messageType, const std::vector<unsigned char>& message);
 
     int broadcastPort;
     int connectionPort;
@@ -40,7 +45,6 @@ private:
     bool firstTimeout;
 
     unsigned long syncMillis;
-    RoboticController* roboticControler;
 
     void OnConnectionEstablished();
     void OnConnectionLost();
@@ -49,8 +53,6 @@ private:
     void sendBroadcast();
     void checkForIncomingPackets();
     void connectToWifi();
-
-    std::vector<INetworkHandlerEventListener*> eventListeners;
 };
 
 #endif // NETWORKHANDLER_H
