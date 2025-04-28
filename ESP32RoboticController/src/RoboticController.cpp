@@ -5,8 +5,9 @@
 #include <Arduino.h>
 #include <cmath>
 #include <cstring>
-#include <thread>
-#include <mutex>
+#include <freertos/FreeRTOS.h>
+#include <freertos/task.h>
+
 
 Gyro gyro;
 const int broadcastPort = 5501;
@@ -48,19 +49,25 @@ RoboticController::RoboticController(const BittleQuadrupedConstructor& construct
         limb.SetLimbServos(preConnectionBaseAngle, preConnectionHipAngle, preConnectionKneeAngle);
     }
 
+    _dataMutex = xSemaphoreCreateMutex();
+    if (!_dataMutex) {
+      Serial.println("ERROR: failed to create data mutex");
+      return;
+    }
+
     networkHandler.subscribeToEvents(this);
   //  networkHandler.SetRoboticController(this);
     networkHandler.initialize();
 
-    // xTaskCreatePinnedToCore(
-    //     ControllerTaskFunc,
-    //     "ControllerTask",
-    //     4096,            // Stack size in words
-    //     this,            // Parameter to pass
-    //     1,               // Task priority
-    //     &_controllerTaskHandle,
-    //     1                // Core 1 (usually best for Wi-Fi + user tasks)
-    // );
+    xTaskCreatePinnedToCore(
+        ControllerTaskFunc,
+        "ControllerTask",
+        4096,            // Stack size in words
+        this,            // Parameter to pass
+        1,               // Task priority
+        &_controllerTaskHandle,
+        1                // Core 1 (usually best for Wi-Fi + user tasks)
+    );
 }
 
 RoboticController::~RoboticController() {
@@ -90,20 +97,22 @@ void RoboticController::RunControllerLoop() {
     uint8_t buffer[sizeof(QuadrupedData)];
    memcpy(buffer, &data, sizeof(QuadrupedData));
    networkHandler.sendMessage(1, buffer, sizeof(QuadrupedData));
-
-
    }
 
 
+}
+
+void RoboticController::RunServos(){
+    
     if (!connectedToClient) {
         for (auto& limb : _limbs) {
             limb.SetLimbServos(preConnectionBaseAngle, preConnectionHipAngle, preConnectionKneeAngle);
         }
     } else {
-        _limbs[0].SetLimbServos(flConnectedBaseAngle, flConnectedHipAngle, flConnectedKneeAngle);
-        _limbs[1].SetLimbServos(frConnectedBaseAngle, frConnectedHipAngle, frConnectedKneeAngle);
-        _limbs[2].SetLimbServos(brConnectedBaseAngle, brConnectedHipAngle, brConnectedKneeAngle);
-        _limbs[3].SetLimbServos(blConnectedBaseAngle, blConnectedHipAngle, blConnectedKneeAngle);
+        _limbs[0].SetLimbServos(receivedData.FLBaseAngle,receivedData.FLHipAngle, receivedData.FLKneeAngle);
+        _limbs[1].SetLimbServos(receivedData.FRBaseAngle,receivedData.FRHipAngle, receivedData.FRKneeAngle);
+        _limbs[2].SetLimbServos(receivedData.BRBaseAngle,receivedData.BRHipAngle, receivedData.BRKneeAngle);
+        _limbs[3].SetLimbServos(receivedData.BLBaseAngle,receivedData.BLHipAngle, receivedData.BLKneeAngle);
     }
 }
 
@@ -117,24 +126,24 @@ void RoboticController::OnMessageReceived(int messageType, const std::vector<uns
             break;
         case 2:
             if (message.size() >= sizeof(QuadrupedLimbData)) {
-                QuadrupedLimbData data;
-                memcpy(&data, message.data(), sizeof(QuadrupedLimbData));
+       
+                memcpy(&receivedData, message.data(), sizeof(QuadrupedLimbData));
 
-                flConnectedBaseAngle = data.FLBaseAngle;
-                flConnectedHipAngle = data.FLHipAngle;
-                flConnectedKneeAngle = data.FLKneeAngle;
+                // flConnectedBaseAngle = data.FLBaseAngle;
+                // flConnectedHipAngle = data.FLHipAngle;
+                // flConnectedKneeAngle = data.FLKneeAngle;
 
-                frConnectedBaseAngle = data.FRBaseAngle;
-                frConnectedHipAngle = data.FRHipAngle;
-                frConnectedKneeAngle = data.FRKneeAngle;
+                // frConnectedBaseAngle = data.FRBaseAngle;
+                // frConnectedHipAngle = data.FRHipAngle;
+                // frConnectedKneeAngle = data.FRKneeAngle;
 
-                brConnectedBaseAngle = data.BRBaseAngle;
-                brConnectedHipAngle = data.BRHipAngle;
-                brConnectedKneeAngle = data.BRKneeAngle;
+                // brConnectedBaseAngle = data.BRBaseAngle;
+                // brConnectedHipAngle = data.BRHipAngle;
+                // brConnectedKneeAngle = data.BRKneeAngle;
 
-                blConnectedBaseAngle = data.BLBaseAngle;
-                blConnectedHipAngle = data.BLHipAngle;
-                blConnectedKneeAngle = data.BLKneeAngle;
+                // blConnectedBaseAngle = data.BLBaseAngle;
+                // blConnectedHipAngle = data.BLHipAngle;
+                // blConnectedKneeAngle = data.BLKneeAngle;
 
                 
             }

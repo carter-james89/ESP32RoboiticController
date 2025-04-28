@@ -35,6 +35,7 @@ void setup() {
 
 void loop() {
   // printMemoryUsage();  // enable when you need it
-  pController->RunControllerLoop();
+ // pController->RunControllerLoop();
+ pController->RunServos();
   vTaskDelay(pdMS_TO_TICKS(kLoopPeriodMs));
 }

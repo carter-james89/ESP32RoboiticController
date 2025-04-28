@@ -8,6 +8,7 @@
 #include <vector>
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
+#include "freertos/semphr.h"
 
 
 struct QuadrupedData {
@@ -41,15 +42,22 @@ public:
     void deactivate();
     bool isActivated() const;
 
+    void RunServos();
+
     void CalculateIKAllLimbs();
 
 private:
     void SerializeInt(byte* message, int value, int& offset, int messageSize);
 
     TaskHandle_t _controllerTaskHandle = nullptr;
+    // forward-declare the FreeRTOS task function
+    static void ControllerTaskFunc(void* param);
 
     bool activated = false;
     bool connectedToClient = false;
+
+    SemaphoreHandle_t _dataMutex;        // <<< new
+    QuadrupedLimbData receivedData;
 
     std::vector<RoboticLimb> _limbs;
 
@@ -59,21 +67,21 @@ private:
     int preConnectionHipAngle = 65;
     int preConnectionKneeAngle = -145;
 
-    int flConnectedBaseAngle = 0;
-    int flConnectedHipAngle = 0;
-    int flConnectedKneeAngle = 0;
+    // int flConnectedBaseAngle = 0;
+    // int flConnectedHipAngle = 0;
+    // int flConnectedKneeAngle = 0;
 
-    int frConnectedBaseAngle = 0;
-    int frConnectedHipAngle = 0;
-    int frConnectedKneeAngle = 0;
+    // int frConnectedBaseAngle = 0;
+    // int frConnectedHipAngle = 0;
+    // int frConnectedKneeAngle = 0;
 
-    int brConnectedBaseAngle = 0;
-    int brConnectedHipAngle = 0;
-    int brConnectedKneeAngle = 0;
+    // int brConnectedBaseAngle = 0;
+    // int brConnectedHipAngle = 0;
+    // int brConnectedKneeAngle = 0;
 
-    int blConnectedBaseAngle = 0;
-    int blConnectedHipAngle = 0;
-    int blConnectedKneeAngle = 0;
+    // int blConnectedBaseAngle = 0;
+    // int blConnectedHipAngle = 0;
+    // int blConnectedKneeAngle = 0;
 };
 
 #endif // ROBOTICCONTROLLER_H
